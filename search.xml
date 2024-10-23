@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>About me</title>
+    <url>/2023/08/14/About%20me/</url>
+    <content><![CDATA[<h3 id="欢迎来到-lovely-lili’s-Blog"><a href="#欢迎来到-lovely-lili’s-Blog" class="headerlink" title="欢迎来到 lovely-lili’s Blog"></a>欢迎来到 lovely-lili’s Blog</h3><h4 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h4><p>我是笠笠，<code>EIE</code>专业的在读大四<br>欢迎与我交流一些电子技术哦！</p>
+]]></content>
+  </entry>
+  <entry>
     <title>ARM学习笔记</title>
     <url>/2024/04/15/ARM/</url>
     <content><![CDATA[<h1 id="ARM-的基础知识"><a href="#ARM-的基础知识" class="headerlink" title="ARM 的基础知识"></a>ARM 的基础知识</h1><h2 id="ARM-的处理器模式"><a href="#ARM-的处理器模式" class="headerlink" title="ARM 的处理器模式"></a>ARM 的处理器模式</h2><p>在<code>ARM Cortex-A</code>&#x2F;<code>ARMv7-A</code>系列中有 9 种 Mode,其中实现了安全扩展的处理器才有<code>MON</code>模式.</p>
@@ -152,12 +158,6 @@
       </categories>
   </entry>
   <entry>
-    <title>About me</title>
-    <url>/2023/08/14/About%20me/</url>
-    <content><![CDATA[<h3 id="欢迎来到-lovely-lili’s-Blog"><a href="#欢迎来到-lovely-lili’s-Blog" class="headerlink" title="欢迎来到 lovely-lili’s Blog"></a>欢迎来到 lovely-lili’s Blog</h3><h4 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h4><p>我是笠笠，<code>EIE</code>专业的在读大四<br>欢迎与我交流一些电子技术哦！</p>
-]]></content>
-  </entry>
-  <entry>
     <title>DHT20（硬件I2C）</title>
     <url>/2024/01/29/DHT20/</url>
     <content><![CDATA[<p>ASAIR继DHT11推出了<code>DHT20</code>，采用I2C协议通信。除此外，两者在量程与精度上也有些许差别,详见：</p>
@@ -240,6 +240,64 @@
             return crc_val  = HAL_CRC_Calculate(hcrc, pBuffer, 6);      //单次CRC校验
         &#125;
 </code></pre>
+]]></content>
+      <categories>
+        <category>MCU</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Embedded IDE</title>
+    <url>/2024/04/17/EIDE/</url>
+    <content><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>因为笔者难以忍受<code>Keil</code>的魔鬼 “智能” 补全，所以此篇应运而生，编写仓促，不免有误，请见谅 .</p>
+<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><p>官网下载地址：</p>
+<blockquote>
+<p><a href="https://www.st.com/zh/development-tools/stm32cubemx.html">https://www.st.com/zh/development-tools/stm32cubemx.html</a></p>
+</blockquote>
+<p><code>STM32CubeMX</code>是 ST 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，用来搭建项目框架再合适不过了,支持<code>EWARM、MDK-ARM、STM32CubeIDE、Makefile</code>等格式输出 .<br><img src="/images/EIDE/MX_output.png"></p>
+<h2 id="Visual-Studio-Code-VSC"><a href="#Visual-Studio-Code-VSC" class="headerlink" title="Visual Studio Code(VSC)"></a>Visual Studio Code(VSC)</h2><p>如果已经使用<code>STM32CubeMX</code>搭建了一个项目框架，那么将在<code>VSC</code>上编写我们的用户代码啦 .</p>
+<p>同样 VSC 也可以在官网下载，但是很慢..，可以参考这位博主的下载教程 .</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/leah126/article/details/131661331">https://blog.csdn.net/leah126/article/details/131661331</a></p>
+</blockquote>
+<h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的<code>EXTENSIONS</code>，搜索<code>C/C++</code>点击安装 .<br><img src="/images/EIDE/C.png"></p>
+<p>选中左侧导航栏底部的<code>Manage-齿轮</code>点击<code>Settings</code>搜索<code>IntelliSense</code>，可以设置代码补全的使能与参数 .<br><img src="/images/EIDE/IntelliSense.png"></p>
+<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>选中左侧导航栏的<code>EXTENSIONS</code>，搜索<code>Cortex-Debug</code>点击安装，用来调试<code>Cortex-M</code>内核的<code>GDB</code>插件<br><img src="/images/EIDE/Cortex-Debug.png"></p>
+<h3 id="Embedded-IDE-EIDE"><a href="#Embedded-IDE-EIDE" class="headerlink" title="Embedded IDE(EIDE)"></a>Embedded IDE(EIDE)</h3><p>官网链接:有使用教程和论坛</p>
+<blockquote>
+<p><a href="https://em-ide.com/">https://em-ide.com/</a></p>
+</blockquote>
+<p>向大佬致敬！</p>
+<p>同样在<code>EXTENSIONS</code>中搜索安装<code>EIDE</code> .<br><img src="/images/EIDE/EIDE.png"></p>
+<h4 id="EIDE-的一些插件与配置"><a href="#EIDE-的一些插件与配置" class="headerlink" title="EIDE 的一些插件与配置"></a>EIDE 的一些插件与配置</h4><h5 id="Setup-Utility-Tools"><a href="#Setup-Utility-Tools" class="headerlink" title="Setup Utility Tools"></a>Setup Utility Tools</h5><p>在<code>EIDE</code>中选择左下区域的<code>OPERATIONS</code> .<br><img src="/images/EIDE/EIDE_Insert.png"></p>
+<p>点击<code>Setup Utility Tools</code>，安装相应的工具，图示是我目前下载的工具，以供参考 .<br><img src="/images/EIDE/EIDE_Insert2.png"></p>
+<h5 id="绑定编译器"><a href="#绑定编译器" class="headerlink" title="绑定编译器"></a>绑定编译器</h5><p>还是回到<code>齿轮</code>中的<code>Setting</code>，搜索<code>ARM</code>并在<code>ARMCC5、ARMCC6、GCC</code>和<code>ARM.INI</code>下方填入编译器及<code>Keil MDK-ARM</code>的本地路径，将<code>ARMCC</code>生成的<code>.axf</code>文件转成<code>.elf</code>文件 .<br><img src="/images/EIDE/ARMCC.png"></p>
+<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><p>如果上面有关<code>EIDE</code>的配置内容笔者讲的不够具体或引起读者误解，可以参考 b 站 up 主<code>threekb</code>的视频，当然最好解决和学习途径是<code>EIDE</code>的官网 .<br>视频链接:</p>
+<blockquote>
+<p><a href="https://www.bilibili.com/video/BV1nr4y1R7Jb/?share_source=copy_web&vd_source=1db224e93eb7d9db5b8f56dfae3e6630">https://www.bilibili.com/video/BV1nr4y1R7Jb/?share_source=copy_web&amp;vd_source=1db224e93eb7d9db5b8f56dfae3e6630</a></p>
+</blockquote>
+<p>这段视频后半部分演示了如何导入现有的<code>MDK-ARM</code>工程，并基于<code>EIDE</code>开发 .</p>
+<p>对于正在开发或者移植的项目来说是顶好的消息，那对于一个全新的工程呢？</p>
+<h3 id="1-创建-Makefile"><a href="#1-创建-Makefile" class="headerlink" title="1.创建 Makefile"></a>1.创建 Makefile</h3><p><code>Makefile</code>文件用来自动化编译<code>C/C++</code>项目 .<code>Makefile</code>文件定义了一系列规则，指明了源文件的编译顺序、依赖关系、是否需要重新编译等 .</p>
+<p>非常高兴的是<code>STM32CubeMX</code>可以生成<code>Makefile</code>文件，无需开发者编写 .<br><img src="/images/EIDE/STM32CubeMX_Output.png"></p>
+<h3 id="2-新建-EIDE-工程"><a href="#2-新建-EIDE-工程" class="headerlink" title="2.新建 EIDE 工程"></a>2.新建 EIDE 工程</h3><p>选中左侧导航栏的<code>EIDE</code>，点击<code>创建新工程</code>-&gt;<code>空项目</code> .<br><img src="/images/EIDE/EIDE_New.png"></p>
+<p>笔者选用的芯片是 STM32F407 系列的，故选择<code>Cortex-M Project</code> .<br><img src="/images/EIDE/core.png"></p>
+<p>需要仔细的是，此时的<code>EIDE</code>的新建工程名称应该与之前在<code>STM32CubeMX</code>设置的工程名称一致 .<br><img src="/images/EIDE/prj_name.png"></p>
+<p>不止于此，项目路径同样需要保持一致 .<br><img src="/images/EIDE/prj_path.png"></p>
+<p>因为之前通过<code>STM32CubeMX</code>创建了项目文件，这里<code>EIDE</code>会提示是否基于已有的路径创建工程文件 .<br><img src="/images/EIDE/yes1.png"><br>切换工作区 .<br><img src="/images/EIDE/yes2.png"></p>
+<h3 id="3-一些初始化设置"><a href="#3-一些初始化设置" class="headerlink" title="3.一些初始化设置"></a>3.一些初始化设置</h3><p>打开<code>Makefile</code>文件，并复制<code>.Id</code>文件的文件名称 .<br><img src="/images/EIDE/config1.png"></p>
+<h3 id="4-添加-Core-与-Drivers"><a href="#4-添加-Core-与-Drivers" class="headerlink" title="4.添加 Core 与 Drivers"></a>4.添加 Core 与 Drivers</h3><p>在生成的<code>EIDE</code>工程界面中点击<code>Project Resources</code>，选择<code>Normal Folder</code>，导入<code>Core</code>与<code>Drivers</code>文件夹 .<del>只导入文件也是可以的，但是不建议</del><br><img src="/images/EIDE/config2.png"></p>
+<h3 id="5-项目配置"><a href="#5-项目配置" class="headerlink" title="5.项目配置"></a>5.项目配置</h3><p>按照<code>Makefile</code>中的信息配置编译器和烧录器选项，添加<code>C</code>的宏定义 .</p>
+<p>将链接文件名<code>STM32xxxxxxx_FLASH.ld</code>复制到选项框 .<br><img src="/images/EIDE/config3.png"></p>
+<h3 id="6-编译"><a href="#6-编译" class="headerlink" title="6.编译"></a>6.编译</h3><ul>
+<li>中文路径会导致编译失败 .</li>
+</ul>
+<p>编译成功后会显示内存资源占用、<code>hex</code>和<code>bin</code>文件输出路径 .<br><img src="/images/EIDE/build.png"></p>
+<h3 id="7-调试"><a href="#7-调试" class="headerlink" title="7.调试"></a>7.调试</h3><blockquote>
+<p><a href="https://marketplace.visualstudio.com/items/CL.eide/changelog">https://marketplace.visualstudio.com/items/CL.eide/changelog</a></p>
+</blockquote>
+<ul>
+<li><code>3.16.0</code>版本中删除了自动生成<code>launch.json</code>调试配置的功能，取而代之的是菜单栏中的<code>Generate Cortex-Debug Configuration</code><br><img src="/images/EIDE/debug_menu.png"></li>
+</ul>
 ]]></content>
       <categories>
         <category>MCU</category>
@@ -342,65 +400,6 @@
       </categories>
   </entry>
   <entry>
-    <title>Embedded IDE</title>
-    <url>/2024/04/17/EIDE/</url>
-    <content><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>因为笔者难以忍受<code>Keil</code>的魔鬼 “智能” 补全，所以此篇应运而生，编写仓促，不免有误，请见谅 .</p>
-<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><p>官网下载地址：</p>
-<blockquote>
-<p><a href="https://www.st.com/zh/development-tools/stm32cubemx.html">https://www.st.com/zh/development-tools/stm32cubemx.html</a></p>
-</blockquote>
-<p><code>STM32CubeMX</code>是 ST 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，用来搭建项目框架再合适不过了,支持<code>EWARM、MDK-ARM、STM32CubeIDE、Makefile</code>等格式输出 .<br><img src="/images/EIDE/MX_output.png"></p>
-<h2 id="Visual-Studio-Code-VSC"><a href="#Visual-Studio-Code-VSC" class="headerlink" title="Visual Studio Code(VSC)"></a>Visual Studio Code(VSC)</h2><p>如果已经使用<code>STM32CubeMX</code>搭建了一个空的项目框架 <del>（其实也不空）</del>，那么将在<code>VSC</code>上编写我们的用户代码啦 .</p>
-<p>同样VSC也可以在官网下载，但是很慢..，可以参考这位博主的下载教程 .</p>
-<blockquote>
-<p><a href="https://blog.csdn.net/leah126/article/details/131661331">https://blog.csdn.net/leah126/article/details/131661331</a></p>
-</blockquote>
-<h3 id="一些插件"><a href="#一些插件" class="headerlink" title="一些插件"></a>一些插件</h3><p>与<code>STM32CubeIDE、IAR、Clion、Keil</code>这些集成开发环境<code>IDE</code>不同，<code>VSC</code>只是一个编辑器，但其丰富的插件使他 “无所不能” .<br><del>现在我就在VSC上写这篇Markdown .</del></p>
-<h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的<code>EXTENSIONS</code>，搜索<code>C/C++</code>点击安装 .<br><img src="/images/EIDE/C.png"></p>
-<p>选中左侧导航栏底部的<code>Manage-齿轮</code>点击<code>Settings</code>搜索<code>IntelliSense</code>，可以设置代码补全的使能与参数 .<br><img src="/images/EIDE/IntelliSense.png"></p>
-<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>选中左侧导航栏的<code>EXTENSIONS</code>，搜索<code>Cortex-Debug</code>点击安装，用来调试<code>Cortex-M</code>内核的<code>GDB</code>插件<br><img src="/images/EIDE/Cortex-Debug.png"></p>
-<h3 id="Embedded-IDE-EIDE"><a href="#Embedded-IDE-EIDE" class="headerlink" title="Embedded IDE(EIDE)"></a>Embedded IDE(EIDE)</h3><p>官网链接:有使用教程和论坛</p>
-<blockquote>
-<p><a href="https://em-ide.com/">https://em-ide.com/</a></p>
-</blockquote>
-<p>无敌！不多说好吧！无敌！向大佬致敬！</p>
-<p>同样在<code>EXTENSIONS</code>中搜索安装<code>EIDE</code> .<br><img src="/images/EIDE/EIDE.png"></p>
-<h4 id="EIDE的一些插件与配置"><a href="#EIDE的一些插件与配置" class="headerlink" title="EIDE的一些插件与配置"></a>EIDE的一些插件与配置</h4><h5 id="Setup-Utility-Tools"><a href="#Setup-Utility-Tools" class="headerlink" title="Setup Utility Tools"></a>Setup Utility Tools</h5><p>在<code>EIDE</code>中选择左下区域的<code>OPERATIONS</code> .<br><img src="/images/EIDE/EIDE_Insert.png"></p>
-<p>点击<code>Setup Utility Tools</code>，安装相应的工具，图示是我目前下载的工具，以供参考 .<br><img src="/images/EIDE/EIDE_Insert2.png"></p>
-<h5 id="绑定编译器"><a href="#绑定编译器" class="headerlink" title="绑定编译器"></a>绑定编译器</h5><p>还是回到<code>齿轮</code>中的<code>Setting</code>，搜索<code>ARM</code>并在<code>ARMCC5、ARMCC6、GCC</code>和<code>ARM.INI</code>下方填入编译器及<code>Keil MDK-ARM</code>的本地路径，将<code>ARMCC</code>生成的<code>.axf</code>文件转成<code>.elf</code>文件 .<br><img src="/images/EIDE/ARMCC.png"></p>
-<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><p>如果上面有关<code>EIDE</code>的配置内容笔者讲的不够具体或引起读者误解，可以参考b站up主<code>threekb</code>的视频，当然最好解决和学习途径是<code>EIDE</code>的官网 .<br>视频链接:</p>
-<blockquote>
-<p><a href="https://www.bilibili.com/video/BV1nr4y1R7Jb/?share_source=copy_web&vd_source=1db224e93eb7d9db5b8f56dfae3e6630">https://www.bilibili.com/video/BV1nr4y1R7Jb/?share_source=copy_web&amp;vd_source=1db224e93eb7d9db5b8f56dfae3e6630</a></p>
-</blockquote>
-<p>这段视频后半部分演示了如何导入现有的<code>MDK-ARM</code>工程，并基于<code>EIDE</code>开发 . <del>当然空的工程也可以</del></p>
-<p>对于正在开发或者移植的项目来说是顶好的消息，那对于一个全新的工程呢？<del>当然不可能全新，也没有不可能</del></p>
-<h3 id="1-创建Makefile"><a href="#1-创建Makefile" class="headerlink" title="1.创建Makefile"></a>1.创建Makefile</h3><p><code>Makefile</code>文件用来自动化编译<code>C/C++</code>项目 .<code>Makefile</code>文件定义了一系列规则，指明了源文件的编译顺序、依赖关系、是否需要重新编译等 .</p>
-<p>非常高兴的是<code>STM32CubeMX</code>可以生成<code>Makefile</code>文件，无需开发者编写 .<br><img src="/images/EIDE/STM32CubeMX_Output.png"></p>
-<h3 id="2-新建EIDE工程"><a href="#2-新建EIDE工程" class="headerlink" title="2.新建EIDE工程"></a>2.新建EIDE工程</h3><p>选中左侧导航栏的<code>EIDE</code>，点击<code>创建新工程</code>-&gt;<code>空项目</code> .<br><img src="/images/EIDE/EIDE_New.png"></p>
-<p>笔者选用的芯片是STM32F407系列的，故选择<code>Cortex-M Project</code> .<br><img src="/images/EIDE/core.png"></p>
-<p>需要仔细的是，此时的<code>EIDE</code>的新建工程名称应该与之前在<code>STM32CubeMX</code>设置的工程名称一致 .<br><img src="/images/EIDE/prj_name.png"></p>
-<p>不止于此，项目路径同样需要保持一致 .<br><img src="/images/EIDE/prj_path.png"></p>
-<p>因为之前通过<code>STM32CubeMX</code>创建了项目文件，这里<code>EIDE</code>会提示是否基于已有的路径创建工程文件 .<br><img src="/images/EIDE/yes1.png"><br>切换工作区 .<br><img src="/images/EIDE/yes2.png"></p>
-<h3 id="3-一些初始化设置"><a href="#3-一些初始化设置" class="headerlink" title="3.一些初始化设置"></a>3.一些初始化设置</h3><p>打开<code>Makefile</code>文件，并复制<code>.Id</code>文件的文件名称 .<br><img src="/images/EIDE/config1.png"></p>
-<h3 id="4-添加Core与Drivers"><a href="#4-添加Core与Drivers" class="headerlink" title="4.添加Core与Drivers"></a>4.添加Core与Drivers</h3><p>在生成的<code>EIDE</code>工程界面中点击<code>Project Resources</code>，选择<code>Normal Folder</code>，导入<code>Core</code>与<code>Drivers</code>文件夹 .<del>只导入文件也是可以的，但是不建议</del><br><img src="/images/EIDE/config2.png"></p>
-<h3 id="5-项目配置"><a href="#5-项目配置" class="headerlink" title="5.项目配置"></a>5.项目配置</h3><p>按照<code>Makefile</code>中的信息配置编译器和烧录器选项，添加<code>C</code>的宏定义 .</p>
-<p>将链接文件名<code>STM32xxxxxxx_FLASH.ld</code>复制到选项框 .<br><img src="/images/EIDE/config3.png"></p>
-<h3 id="6-编译"><a href="#6-编译" class="headerlink" title="6.编译"></a>6.编译</h3><ul>
-<li>中文路径会导致编译失败 .</li>
-</ul>
-<p>编译成功后会显示内存资源占用、<code>hex</code>和<code>bin</code>文件输出路径 .<br><img src="/images/EIDE/build.png"></p>
-<h3 id="7-调试"><a href="#7-调试" class="headerlink" title="7.调试"></a>7.调试</h3><blockquote>
-<p><a href="https://marketplace.visualstudio.com/items/CL.eide/changelog">https://marketplace.visualstudio.com/items/CL.eide/changelog</a></p>
-</blockquote>
-<ul>
-<li><code>3.16.0</code>版本中删除了自动生成<code>launch.json</code>调试配置的功能，取而代之的是菜单栏中的<code>Generate Cortex-Debug Configuration</code><br><img src="/images/EIDE/debug_menu.png"></li>
-</ul>
-]]></content>
-      <categories>
-        <category>MCU</category>
-      </categories>
-  </entry>
-  <entry>
     <title>BUCK的电感值计算</title>
     <url>/2023/09/08/MP2456/</url>
     <content><![CDATA[<h1 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h1><p>MP2456 datasheet有关于电感值的计算公式<br>下图为手册相关内容<br><img src="/images/buck/MP2456.jpg"></p>
@@ -454,6 +453,36 @@ L = (Vin - Vout) * D / fsw * r * Iload
 ]]></content>
       <categories>
         <category>开关电源</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>在RAM中调试</title>
+    <url>/2024/05/01/RAM_debugf/</url>
+    <content><![CDATA[<h1 id="在RAM中调试的好处？"><a href="#在RAM中调试的好处？" class="headerlink" title="在RAM中调试的好处？"></a>在RAM中调试的好处？</h1><h2 id="FLASH的擦除寿命"><a href="#FLASH的擦除寿命" class="headerlink" title="FLASH的擦除寿命"></a>FLASH的擦除寿命</h2><p>需要了解的是<code>FLASH</code>的擦除次数有限，例如：<code>STM32g0xx</code>的擦除耐力大约在<code>10K</code>次。<br><img src="/images/RAM_Debug/FLASH_endurance.png"></p>
+<p>而每次烧录程序是会对 部分 &#x2F; 所有 扇区进行擦除然后再写入的，虽然<code>10K</code>是一个较大的值，假设每天烧录百次也需要百天才会损耗掉频繁使用的区域。<br>但更具有优势的是把程序放在<code>RAM</code>中运行，并不用担心擦除耐力这个问题。不止于此，在<code>RAM</code>中烧录程序会非常迅速，因为省去了擦除<code>FLASH</code>操作所带来的时间。</p>
+<h1 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h1><h2 id="设置启动地址"><a href="#设置启动地址" class="headerlink" title="设置启动地址"></a>设置启动地址</h2><p>在<code>STM32</code>中可以设置 <code>BOOT</code>引脚 &#x2F; 选项字节 使<code>MCU</code>在不同的地址区域上电运行。</p>
+<ul>
+<li>通过<code>BOOTx</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Pin.png"></li>
+<li>通过<code>BOOT</code>和<code>选项字节</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Reg.png"></li>
+</ul>
+<h2 id="链接设置"><a href="#链接设置" class="headerlink" title="链接设置"></a>链接设置</h2><p>虽然设置了<code>MCU</code>上电在<code>RAM</code>中启动，但是需要仔细的是编译之后生成的文件并没有全部正确的链接到<code>RAM</code>所属的地址当中。这时需要修改<code>ld</code>文件,将<strong>所有</strong>的分区映射到<code>RAM</code>当中。</p>
+<ul>
+<li>这里仅演示部分修改。<br><img src="/images/RAM_Debug/Chang_ld.png"></li>
+</ul>
+<p>修改之后，编译输出信息里会观察到<code>FLASH</code>占用为<code>0%</code>。<br><img src="/images/RAM_Debug/Build.png"></p>
+<h2 id="Debug设置"><a href="#Debug设置" class="headerlink" title="Debug设置"></a>Debug设置</h2><p>如果顺利完成上述中<code>设置启动地址</code>和<code>链接设置</code>这两步，并且烧录后进行软复位（复位PC等寄存器），程序会正常运行，但是看上去似乎和在<code>FLASH</code>中运行没有区别。因为即便是烧录到<code>FLASH</code>中，程序也会“搬移”到<code>RAM</code>中运行，所以大多数情况在<code>RAM</code>或者<code>FLASH</code>中调试结果区别不大。</p>
+<p>那如何判断之前的工作是否成功呢？一个有效的办法是在程序运行时，观察<code>PC</code>的值是否如所愿——在<code>RAM</code>所属的地址区域内变化。</p>
+<ul>
+<li>在示例图中：PC值为<code>0x20000226</code>，值得高兴的是，这属于<code>RAM</code>的地址——告示着，配置工作成功完成了。<br><img src="/images/RAM_Debug/PC_Value.png"></li>
+</ul>
+<h1 id="一些Bug"><a href="#一些Bug" class="headerlink" title="一些Bug"></a>一些Bug</h1><p>因为笔者不久前成功完成了一款<code>Wireless DAP-Link</code>的制作， 无线 &#x2F; 有线 模式工作正常。但是当笔者想要在<code>RAM</code>中烧录时候却出现校验不通过问题，惊奇的是在调试模式及退出后程序都是如期进行的。<br><img src="/images/RAM_Debug/Verify_Error.png"></p>
+<ul>
+<li><code>ST-Link</code>、<code>J-Link</code>在烧录程序时候非常顺利。</li>
+<li><code> DAP-Link</code>需要按住<code>RST</code>并在烧录过程中松开。<del>或许这样避开了校验</del></li>
+</ul>
+]]></content>
+      <categories>
+        <category>MCU</category>
       </categories>
   </entry>
   <entry>
@@ -635,36 +664,6 @@ L = (Vin - Vout) * D / fsw * r * Iload
 <h2 id="命令列表"><a href="#命令列表" class="headerlink" title="命令列表"></a>命令列表</h2><h3 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h3><p><img src="/images/sw_i2c/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4.png"></p>
 <h3 id="滚动命令"><a href="#滚动命令" class="headerlink" title="滚动命令"></a>滚动命令</h3><p><img src="/images/sw_i2c/26.png"></p>
 <h3 id="11-8"><a href="#11-8" class="headerlink" title="11&#x2F;8"></a>11&#x2F;8</h3><p><img src="/images/%E9%B8%BD%E5%AD%90.png"></p>
-]]></content>
-      <categories>
-        <category>MCU</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>在RAM中调试</title>
-    <url>/2024/05/01/RAM_debugf/</url>
-    <content><![CDATA[<h1 id="在RAM中调试的好处？"><a href="#在RAM中调试的好处？" class="headerlink" title="在RAM中调试的好处？"></a>在RAM中调试的好处？</h1><h2 id="FLASH的擦除寿命"><a href="#FLASH的擦除寿命" class="headerlink" title="FLASH的擦除寿命"></a>FLASH的擦除寿命</h2><p>需要了解的是<code>FLASH</code>的擦除次数有限，例如：<code>STM32g0xx</code>的擦除耐力大约在<code>10K</code>次。<br><img src="/images/RAM_Debug/FLASH_endurance.png"></p>
-<p>而每次烧录程序是会对 部分 &#x2F; 所有 扇区进行擦除然后再写入的，虽然<code>10K</code>是一个较大的值，假设每天烧录百次也需要百天才会损耗掉频繁使用的区域。<br>但更具有优势的是把程序放在<code>RAM</code>中运行，并不用担心擦除耐力这个问题。不止于此，在<code>RAM</code>中烧录程序会非常迅速，因为省去了擦除<code>FLASH</code>操作所带来的时间。</p>
-<h1 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h1><h2 id="设置启动地址"><a href="#设置启动地址" class="headerlink" title="设置启动地址"></a>设置启动地址</h2><p>在<code>STM32</code>中可以设置 <code>BOOT</code>引脚 &#x2F; 选项字节 使<code>MCU</code>在不同的地址区域上电运行。</p>
-<ul>
-<li>通过<code>BOOTx</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Pin.png"></li>
-<li>通过<code>BOOT</code>和<code>选项字节</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Reg.png"></li>
-</ul>
-<h2 id="链接设置"><a href="#链接设置" class="headerlink" title="链接设置"></a>链接设置</h2><p>虽然设置了<code>MCU</code>上电在<code>RAM</code>中启动，但是需要仔细的是编译之后生成的文件并没有全部正确的链接到<code>RAM</code>所属的地址当中。这时需要修改<code>ld</code>文件,将<strong>所有</strong>的分区映射到<code>RAM</code>当中。</p>
-<ul>
-<li>这里仅演示部分修改。<br><img src="/images/RAM_Debug/Chang_ld.png"></li>
-</ul>
-<p>修改之后，编译输出信息里会观察到<code>FLASH</code>占用为<code>0%</code>。<br><img src="/images/RAM_Debug/Build.png"></p>
-<h2 id="Debug设置"><a href="#Debug设置" class="headerlink" title="Debug设置"></a>Debug设置</h2><p>如果顺利完成上述中<code>设置启动地址</code>和<code>链接设置</code>这两步，并且烧录后进行软复位（复位PC等寄存器），程序会正常运行，但是看上去似乎和在<code>FLASH</code>中运行没有区别。因为即便是烧录到<code>FLASH</code>中，程序也会“搬移”到<code>RAM</code>中运行，所以大多数情况在<code>RAM</code>或者<code>FLASH</code>中调试结果区别不大。</p>
-<p>那如何判断之前的工作是否成功呢？一个有效的办法是在程序运行时，观察<code>PC</code>的值是否如所愿——在<code>RAM</code>所属的地址区域内变化。</p>
-<ul>
-<li>在示例图中：PC值为<code>0x20000226</code>，值得高兴的是，这属于<code>RAM</code>的地址——告示着，配置工作成功完成了。<br><img src="/images/RAM_Debug/PC_Value.png"></li>
-</ul>
-<h1 id="一些Bug"><a href="#一些Bug" class="headerlink" title="一些Bug"></a>一些Bug</h1><p>因为笔者不久前成功完成了一款<code>Wireless DAP-Link</code>的制作， 无线 &#x2F; 有线 模式工作正常。但是当笔者想要在<code>RAM</code>中烧录时候却出现校验不通过问题，惊奇的是在调试模式及退出后程序都是如期进行的。<br><img src="/images/RAM_Debug/Verify_Error.png"></p>
-<ul>
-<li><code>ST-Link</code>、<code>J-Link</code>在烧录程序时候非常顺利。</li>
-<li><code> DAP-Link</code>需要按住<code>RST</code>并在烧录过程中松开。<del>或许这样避开了校验</del></li>
-</ul>
 ]]></content>
       <categories>
         <category>MCU</category>
