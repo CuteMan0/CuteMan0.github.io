@@ -165,7 +165,7 @@
     
     <div class="content" v-pre>
         <h1 id="在-RAM-中调试的好处？"><a href="#在-RAM-中调试的好处？" class="headerlink" title="在 RAM 中调试的好处？"></a>在 RAM 中调试的好处？</h1><h2 id="FLASH-的擦除寿命"><a href="#FLASH-的擦除寿命" class="headerlink" title="FLASH 的擦除寿命"></a>FLASH 的擦除寿命</h2><p>需要了解的是<code>FLASH</code>的擦除次数有限，例如：<code>STM32g0xx</code>的擦除耐力大约在<code>10K</code>次。<br><img src="/images/RAM_Debug/FLASH_endurance.png"></p>
-<p>而每次烧录程序是会对 部分 &#x2F; 所有 扇区进行擦除然后再写入的，即使<code>10K</code>是一个较大的值，假设每天烧录一百次也需要三个月才会损耗掉频繁使用的区域。<br>但更具有优势的是把程序放在<code>RAM</code>中运行，并不用担心擦除耐力这个问题。而且，在<code>RAM</code>中烧录程序会非常迅速，因为省去了擦除<code>FLASH</code>操作所带来的时间。</p>
+<p>而每次烧录程序是会对 部分 &#x2F; 所有 扇区进行擦除然后再写入的，即使<code>10K</code>是一个较大的值，但更具有优势的是把程序放在<code>RAM</code>中运行，并不用担心擦除耐力这个问题。而且，在<code>RAM</code>中烧录程序会非常迅速，因此省去了擦除<code>FLASH</code>操作所带来的时间。</p>
 <h1 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h1><h2 id="设置启动地址"><a href="#设置启动地址" class="headerlink" title="设置启动地址"></a>设置启动地址</h2><p>在<code>STM32</code>中可以设置 <code>BOOT</code>引脚 &#x2F; 选项字节 使<code>MCU</code>在不同的地址区域上电运行。</p>
 <ul>
 <li>通过<code>BOOTx</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Pin.png"></li>
@@ -177,14 +177,9 @@
 </ul>
 <p>修改之后，编译输出信息里会观察到<code>FLASH</code>占用为<code>0%</code>。<br><img src="/images/RAM_Debug/Build.png"></p>
 <h2 id="Debug-设置"><a href="#Debug-设置" class="headerlink" title="Debug 设置"></a>Debug 设置</h2><p>如果顺利完成上述中<code>设置启动地址</code>和<code>链接设置</code>这两步，并且烧录后进行软复位（复位 PC 等寄存器），程序会正常运行，但是看上去似乎和在<code>FLASH</code>中运行没有区别。因为即便是烧录到<code>FLASH</code>中，程序也会“搬移”到<code>RAM</code>中运行，所以大多数情况在<code>RAM</code>或者<code>FLASH</code>中调试结果区别不大。</p>
-<p>那如何判断之前的工作是否成功呢？一个有效的办法是在程序运行时，观察<code>PC</code>的值是否如所愿——在<code>RAM</code>所属的地址区域内变化。</p>
+<p>那如何判断之前的工作是否成功呢？一个有效的办法是在程序运行时，观察<code>PC</code>的值是否在<code>RAM</code>所属的地址区域内。</p>
 <ul>
-<li>在示例图中：PC 值为<code>0x20000226</code>，值得高兴的是，这属于<code>RAM</code>的地址——告示着，配置工作成功完成了。<br><img src="/images/RAM_Debug/PC_Value.png"></li>
-</ul>
-<h1 id="一些-Bug"><a href="#一些-Bug" class="headerlink" title="一些 Bug"></a>一些 Bug</h1><p>因为笔者不久前成功完成了一款<code>Wireless DAP-Link</code>的制作， 无线 &#x2F; 有线 模式工作正常。但是当笔者想要在<code>RAM</code>中烧录时候却出现校验不通过问题，惊奇的是在调试模式及退出后程序都是如期进行的。<br><img src="/images/RAM_Debug/Verify_Error.png"></p>
-<ul>
-<li><code>ST-Link</code>、<code>J-Link</code>在烧录程序时候非常顺利。</li>
-<li><code> DAP-Link</code>需要按住<code>RST</code>并在烧录过程中松开。<del>或许这样避开了校验</del></li>
+<li>在示例图中：PC 值为<code>0x20000226</code>，值得高兴的是，这属于<code>RAM</code>的地址。<br><img src="/images/RAM_Debug/PC_Value.png"></li>
 </ul>
 
     </div>
