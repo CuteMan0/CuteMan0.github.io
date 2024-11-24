@@ -5,7 +5,7 @@
     <url>/2023/08/14/About%20me/</url>
     <content><![CDATA[<h3 id="欢迎来到-lovely-lili’s-Blog"><a href="#欢迎来到-lovely-lili’s-Blog" class="headerlink" title="欢迎来到 lovely-lili’s Blog"></a>欢迎来到 lovely-lili’s Blog</h3><h4 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h4><p>我是笠笠，<code>EE</code>专业的在读大四</p>
 <blockquote>
-<p>欢迎与我交流一些电子技术哦！ <a href="mailto:&#115;&#105;&#x78;&#105;&#x61;&#110;&#46;&#x77;&#64;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;">&#115;&#105;&#x78;&#105;&#x61;&#110;&#46;&#x77;&#64;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>欢迎与我交流一些电子技术哦！ <a href="mailto:&#115;&#x69;&#120;&#x69;&#x61;&#x6e;&#46;&#119;&#64;&#x71;&#x71;&#x2e;&#99;&#111;&#109;">&#115;&#x69;&#120;&#x69;&#x61;&#x6e;&#46;&#119;&#64;&#x71;&#x71;&#x2e;&#99;&#111;&#109;</a></p>
 </blockquote>
 ]]></content>
   </entry>
@@ -191,6 +191,62 @@
       </categories>
   </entry>
   <entry>
+    <title>BUCK的电感值计算</title>
+    <url>/2023/09/08/MP2456/</url>
+    <content><![CDATA[<h1 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h1><p>MP2456 datasheet有关于电感值的计算公式<br>下图为手册相关内容<br><img src="/images/buck/MP2456.jpg"></p>
+<h2 id="电感感应电压公式-V-L-di-dt"><a href="#电感感应电压公式-V-L-di-dt" class="headerlink" title="电感感应电压公式 V &#x3D; L * (di&#x2F;dt)"></a>电感感应电压公式 V &#x3D; L * (di&#x2F;dt)</h2><ul>
+<li>电感上的电流不能突变</li>
+<li>电感上储存的能量不能突变</li>
+</ul>
+<p>将公式变换为</p>
+<pre><code>V * Δt = L * ΔI    （1）
+</code></pre>
+<h2 id="伏秒定律-Von-ton-Voff-toff"><a href="#伏秒定律-Von-ton-Voff-toff" class="headerlink" title="伏秒定律 Von * ton &#x3D; Voff * toff"></a>伏秒定律 Von * ton &#x3D; Voff * toff</h2><p>伏秒定律指，导通阶段的电感电压 Von 与其导通时间 ton 的乘积必然等于关断阶段的电感电压 Voff 与其关断时间 toff 的乘积</p>
+<pre><code>由(1)得出
+Ion、Ioff为导通与关断期间电感的电流变化量
+Von * ton = L * Ion
+Voff * toff = L * Ioff
+
+D为占空比、T为开关周期、fsw为开关频率，在CCM模式下有
+ton = D * T = D / fsw 
+toff = (1-D) * T = (1-D) / fsw
+代入至伏秒定律，得
+Von * ton = Von * D / fsw = L * Ion             (2.1)
+Voff * toff = Voff * (1-D) / fsw = L * Ioff     (2.2)
+</code></pre>
+<h2 id="电流纹波率-r-ΔI-Idc"><a href="#电流纹波率-r-ΔI-Idc" class="headerlink" title="电流纹波率 r &#x3D; ΔI &#x2F; Idc"></a>电流纹波率 r &#x3D; ΔI &#x2F; Idc</h2><p>r 为电感的交流纹波 ΔI 与电感的直流分量 Idc 的比值，经验取值 0.3 - 0.5<br>    在Buck电路</p>
+<pre><code>（1）负载电流 Iload = Idc
+（2）电流纹波 ΔI 与交流分量 Iac 的关系：ΔI = 2 * Iac = r * Idc          (3)
+（3）峰值电流 Ipeak 与 Iac、Idc 的关系：Ipeak = Iac + Idc = Idc * (1+r/2)
+ 得出 Ipeak = Iload + 1/2 * ΔI 与手册吻合
+</code></pre>
+<h2 id="ton与toff的电路"><a href="#ton与toff的电路" class="headerlink" title="ton与toff的电路"></a>ton与toff的电路</h2><p>此图为同步整流的BUCK电路模型<br><img src="/images/buck/BUCK%E7%94%B5%E8%B7%AF%E5%9B%BE.png"></p>
+<h3 id="Von-Vin-Vout-ton段"><a href="#Von-Vin-Vout-ton段" class="headerlink" title="Von &#x3D; Vin - Vout (ton段)"></a>Von &#x3D; Vin - Vout (ton段)</h3><p>Buck电路，在ton期间Q1导通、Q2关断，电流回路如上图蓝色所示</p>
+<pre><code>根据(2.1)、(1)、(3)有
+Von * ton = Von * D / fsw = L * Ion = L * ΔI = L * r * Idc = L * r * Iload
+将 Von = Vin - Vout 代入 Von * D / fsw = L * r * Iload
+得 L = (Vin - Vout) * D / fsw * r * Iload       (4.1)
+</code></pre>
+<h3 id="Voff-Vout-toff段"><a href="#Voff-Vout-toff段" class="headerlink" title="Voff &#x3D; Vout (toff段)"></a>Voff &#x3D; Vout (toff段)</h3><p>Buck电路，在toff期间Q2导通、Q1关断，电流回路如上图红色所示</p>
+<pre><code>根据(2.2)、(1)、(3)有
+Voff * toff = Voff * (1-D) / fsw = L * Ioff = L * ΔI = L * r * Idc = L * r * Iload
+将 Voff = Vout 代入 Voff * (1-D) / fsw = L * r * Iload
+得 L = Vout * (1-D) / fsw * r * Iload           (4.2)
+</code></pre>
+<h2 id="传递函数-D-Vout-Vin"><a href="#传递函数-D-Vout-Vin" class="headerlink" title="传递函数 D &#x3D; Vout &#x2F; Vin"></a>传递函数 D &#x3D; Vout &#x2F; Vin</h2><p>在 ton 和 toff 段出现了(4.1)、(4.2)两个公式</p>
+<pre><code>(Vin - Vout) * D = Vin * D * (1 - Vout/Vin)
+只要满足 Vout / Vin = D ，可使(4.1)与(4.2) 相同
+即 (Vin - Vout) * D = Vout * (1-D)
+将 D = Vout / Vin 称为 BUCK电路 的直流传递函数
+故，Buck电路的电感计算公式为
+L = (Vin - Vout) * D / fsw * r * Iload
+</code></pre>
+]]></content>
+      <categories>
+        <category>开关电源</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Embedded IDE</title>
     <url>/2024/04/17/EIDE/</url>
     <content><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>没序</p>
@@ -264,62 +320,6 @@
 ]]></content>
       <categories>
         <category>MCU</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>BUCK的电感值计算</title>
-    <url>/2023/09/08/MP2456/</url>
-    <content><![CDATA[<h1 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h1><p>MP2456 datasheet有关于电感值的计算公式<br>下图为手册相关内容<br><img src="/images/buck/MP2456.jpg"></p>
-<h2 id="电感感应电压公式-V-L-di-dt"><a href="#电感感应电压公式-V-L-di-dt" class="headerlink" title="电感感应电压公式 V &#x3D; L * (di&#x2F;dt)"></a>电感感应电压公式 V &#x3D; L * (di&#x2F;dt)</h2><ul>
-<li>电感上的电流不能突变</li>
-<li>电感上储存的能量不能突变</li>
-</ul>
-<p>将公式变换为</p>
-<pre><code>V * Δt = L * ΔI    （1）
-</code></pre>
-<h2 id="伏秒定律-Von-ton-Voff-toff"><a href="#伏秒定律-Von-ton-Voff-toff" class="headerlink" title="伏秒定律 Von * ton &#x3D; Voff * toff"></a>伏秒定律 Von * ton &#x3D; Voff * toff</h2><p>伏秒定律指，导通阶段的电感电压 Von 与其导通时间 ton 的乘积必然等于关断阶段的电感电压 Voff 与其关断时间 toff 的乘积</p>
-<pre><code>由(1)得出
-Ion、Ioff为导通与关断期间电感的电流变化量
-Von * ton = L * Ion
-Voff * toff = L * Ioff
-
-D为占空比、T为开关周期、fsw为开关频率，在CCM模式下有
-ton = D * T = D / fsw 
-toff = (1-D) * T = (1-D) / fsw
-代入至伏秒定律，得
-Von * ton = Von * D / fsw = L * Ion             (2.1)
-Voff * toff = Voff * (1-D) / fsw = L * Ioff     (2.2)
-</code></pre>
-<h2 id="电流纹波率-r-ΔI-Idc"><a href="#电流纹波率-r-ΔI-Idc" class="headerlink" title="电流纹波率 r &#x3D; ΔI &#x2F; Idc"></a>电流纹波率 r &#x3D; ΔI &#x2F; Idc</h2><p>r 为电感的交流纹波 ΔI 与电感的直流分量 Idc 的比值，经验取值 0.3 - 0.5<br>    在Buck电路</p>
-<pre><code>（1）负载电流 Iload = Idc
-（2）电流纹波 ΔI 与交流分量 Iac 的关系：ΔI = 2 * Iac = r * Idc          (3)
-（3）峰值电流 Ipeak 与 Iac、Idc 的关系：Ipeak = Iac + Idc = Idc * (1+r/2)
- 得出 Ipeak = Iload + 1/2 * ΔI 与手册吻合
-</code></pre>
-<h2 id="ton与toff的电路"><a href="#ton与toff的电路" class="headerlink" title="ton与toff的电路"></a>ton与toff的电路</h2><p>此图为同步整流的BUCK电路模型<br><img src="/images/buck/BUCK%E7%94%B5%E8%B7%AF%E5%9B%BE.png"></p>
-<h3 id="Von-Vin-Vout-ton段"><a href="#Von-Vin-Vout-ton段" class="headerlink" title="Von &#x3D; Vin - Vout (ton段)"></a>Von &#x3D; Vin - Vout (ton段)</h3><p>Buck电路，在ton期间Q1导通、Q2关断，电流回路如上图蓝色所示</p>
-<pre><code>根据(2.1)、(1)、(3)有
-Von * ton = Von * D / fsw = L * Ion = L * ΔI = L * r * Idc = L * r * Iload
-将 Von = Vin - Vout 代入 Von * D / fsw = L * r * Iload
-得 L = (Vin - Vout) * D / fsw * r * Iload       (4.1)
-</code></pre>
-<h3 id="Voff-Vout-toff段"><a href="#Voff-Vout-toff段" class="headerlink" title="Voff &#x3D; Vout (toff段)"></a>Voff &#x3D; Vout (toff段)</h3><p>Buck电路，在toff期间Q2导通、Q1关断，电流回路如上图红色所示</p>
-<pre><code>根据(2.2)、(1)、(3)有
-Voff * toff = Voff * (1-D) / fsw = L * Ioff = L * ΔI = L * r * Idc = L * r * Iload
-将 Voff = Vout 代入 Voff * (1-D) / fsw = L * r * Iload
-得 L = Vout * (1-D) / fsw * r * Iload           (4.2)
-</code></pre>
-<h2 id="传递函数-D-Vout-Vin"><a href="#传递函数-D-Vout-Vin" class="headerlink" title="传递函数 D &#x3D; Vout &#x2F; Vin"></a>传递函数 D &#x3D; Vout &#x2F; Vin</h2><p>在 ton 和 toff 段出现了(4.1)、(4.2)两个公式</p>
-<pre><code>(Vin - Vout) * D = Vin * D * (1 - Vout/Vin)
-只要满足 Vout / Vin = D ，可使(4.1)与(4.2) 相同
-即 (Vin - Vout) * D = Vout * (1-D)
-将 D = Vout / Vin 称为 BUCK电路 的直流传递函数
-故，Buck电路的电感计算公式为
-L = (Vin - Vout) * D / fsw * r * Iload
-</code></pre>
-]]></content>
-      <categories>
-        <category>开关电源</category>
       </categories>
   </entry>
   <entry>
