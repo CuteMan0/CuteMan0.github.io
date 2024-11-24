@@ -3,104 +3,11 @@
   <entry>
     <title>About me</title>
     <url>/2023/08/14/About%20me/</url>
-    <content><![CDATA[<h3 id="欢迎来到-lovely-lili’s-Blog"><a href="#欢迎来到-lovely-lili’s-Blog" class="headerlink" title="欢迎来到 lovely-lili’s Blog"></a>欢迎来到 lovely-lili’s Blog</h3><h4 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h4><p>我是笠笠，<code>EIE</code>专业的在读大四<br>欢迎与我交流一些电子技术哦！</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>微秒级delay</title>
-    <url>/2023/12/29/Delay_us/</url>
-    <content><![CDATA[<h1 id="Takeaway"><a href="#Takeaway" class="headerlink" title="Takeaway"></a>Takeaway</h1><p>转载声明:</p>
+    <content><![CDATA[<h3 id="欢迎来到-lovely-lili’s-Blog"><a href="#欢迎来到-lovely-lili’s-Blog" class="headerlink" title="欢迎来到 lovely-lili’s Blog"></a>欢迎来到 lovely-lili’s Blog</h3><h4 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h4><p>我是笠笠，<code>EE</code>专业的在读大四</p>
 <blockquote>
-<p><a href="https://blog.csdn.net/qq153471503/article/details/102930097">https://blog.csdn.net/qq153471503/article/details/102930097</a></p>
+<p>欢迎与我交流一些电子技术哦！ <a href="mailto:&#115;&#105;&#x78;&#105;&#x61;&#110;&#46;&#x77;&#64;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;">&#115;&#105;&#x78;&#105;&#x61;&#110;&#46;&#x77;&#64;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;</a></p>
 </blockquote>
-<h2 id="F1系列-72M"><a href="#F1系列-72M" class="headerlink" title="F1系列(72M)"></a>F1系列(72M)</h2><pre><code class="c">    void delay_us(uint32_t us)
-    &#123;
-        uint32_t delay = (HAL_RCC_GetHCLKFreq() / 4000000 * us);
-        while (delay--)
-        &#123;
-            ;
-        &#125;
-    &#125;
-</code></pre>
-<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><ul>
-<li><p>delay的计算<br>使用<code>GCC -O0</code>编译显示，在<code>while</code>中需要重复执行5条指令，而<code>M3</code>内核的<code>STM32</code>整型运算性能为<code>1.25DMIPS/MHz</code> .<br><img src="/images/delay_us/O0.png"><br>非常凑巧的是：</p>
-<pre><code>  设 HAL_RCC_GetHCLKFreq() = f ，N = f / delay .
-  则单位延时Time = [5 * (f / N)] / (1.25 * f) = 5 / (1.25 * N),Uint:us .
-</code></pre>
-<p>  故取<code>N = 4000000</code>恰好为<code>1us</code> .</p>
-</li>
-<li><p>仔细编译优化等级</p>
-<ul>
-<li><code>O1</code>级优化，指令变少 .<br><img src="/images/delay_us/O1.png"></li>
-<li><code>O2</code>级优化，只有一句跳转，不执行<code>while</code> .<br><img src="/images/delay_us/O2.png"></li>
-</ul>
-</li>
-</ul>
-<h2 id="Hal库通用"><a href="#Hal库通用" class="headerlink" title="Hal库通用"></a>Hal库通用</h2><pre><code class="c">    #define CPU_FREQUENCY_MHZ    184		// STM32系统时钟主频
-    void HAL_Delay_us(__IO uint32_t delay)
-    &#123;
-        int last, curr, val;
-        int temp;
-
-        while (delay != 0)
-        &#123;
-            temp = delay &gt; 900 ? 900 : delay;
-            last = SysTick-&gt;VAL;
-            curr = last - CPU_FREQUENCY_MHZ * temp;
-            if (curr &gt;= 0)
-            &#123;
-                do
-                &#123;
-                    val = SysTick-&gt;VAL;
-                &#125;
-                while ((val &lt; last) &amp;&amp; (val &gt;= curr));
-            &#125;
-            else
-            &#123;
-                curr += CPU_FREQUENCY_MHZ * 1000;
-                do
-                &#123;
-                    val = SysTick-&gt;VAL;
-                &#125;
-                while ((val &lt;= last) || (val &gt; curr));
-            &#125;
-            delay -= temp;
-        &#125;
-    &#125;
-</code></pre>
-<h3 id="备注-1"><a href="#备注-1" class="headerlink" title="备注"></a>备注</h3><blockquote>
-<p>关于 SysTick可参考ST的CM3内核手册PM0056 Programming manual .</p>
-</blockquote>
-<p><code>SysTick-&gt;LOAD</code> 的值应为 <code>(CPU_FREQUENCY_MHZ * 1000) -1</code> 在此条件下 <code>SysTick</code> 1μs自减，1ms重载 .</p>
-<p>当传入<code>delay</code>参数时，对其按照temp进行拆分———因为VAL不会超过<code>1000</code> .</p>
-<p>对拆分后的<code>delay</code>分段延时:<code>(delay/temp)*temp + delay%temp</code> .</p>
-<ol>
-<li>当<code>curr</code> ≥ 0时<br><img src="/images/delay_us/curr+.png"></li>
-</ol>
-<p>  通过<code>(val &lt; last) &amp;&amp; (val &gt;= curr)</code>来实现一次temp延时.</p>
-<ol start="2">
-<li>当<code>curr</code> ＜ 0时<br><img src="/images/delay_us/curr-1.png"></li>
-</ol>
-<p>  执行<code>curr += CPU_FREQUENCY_MHZ * 1000</code><br><img src="/images/delay_us/curr-2.png"></p>
-<p>  通过<code>(val &lt;= last) || (val &gt; curr)</code>来实现一次temp延时.</p>
-<h2 id="全通用"><a href="#全通用" class="headerlink" title="全通用"></a>全通用</h2><p>(这里是HAL写法)，但需要占用一个定时器 .</p>
-<pre><code class="c">    #define DLY_TIM_Handle (&amp;htimx)
-    void delay_us(uint16_t nus)
-    &#123;
-        __HAL_TIM_SET_COUNTER(DLY_TIM_Handle, 0);
-        __HAL_TIM_ENABLE(DLY_TIM_Handle);
-        while (__HAL_TIM_GET_COUNTER(DLY_TIM_Handle) &lt; nus)
-        &#123;
-            ;
-        &#125;
-        __HAL_TIM_DISABLE(DLY_TIM_Handle);
-    &#125;
-</code></pre>
-<h3 id="备注-2"><a href="#备注-2" class="headerlink" title="备注"></a>备注</h3><p>设置TIMx的计数周期为1μs,实现<code>delay_us</code> .</p>
 ]]></content>
-      <categories>
-        <category>MCU</category>
-      </categories>
   </entry>
   <entry>
     <title>DHT20（硬件I2C）</title>
@@ -191,6 +98,99 @@
       </categories>
   </entry>
   <entry>
+    <title>微秒级delay</title>
+    <url>/2023/12/29/Delay_us/</url>
+    <content><![CDATA[<h1 id="Takeaway"><a href="#Takeaway" class="headerlink" title="Takeaway"></a>Takeaway</h1><p>转载声明:</p>
+<blockquote>
+<p><a href="https://blog.csdn.net/qq153471503/article/details/102930097">https://blog.csdn.net/qq153471503/article/details/102930097</a></p>
+</blockquote>
+<h2 id="F1-系列-72M"><a href="#F1-系列-72M" class="headerlink" title="F1 系列(72M)"></a>F1 系列(72M)</h2><pre><code class="c">    void delay_us(uint32_t us)
+    &#123;
+        uint32_t delay = (HAL_RCC_GetHCLKFreq() / 4000000 * us);
+        while (delay--)
+        &#123;
+            ;
+        &#125;
+    &#125;
+</code></pre>
+<h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><ul>
+<li><p><code>delay</code> 的计算<br>使用<code>GCC -O0</code>编译显示，在<code>while</code>中需要重复执行 5 条指令，而<code>M3</code>内核的<code>STM32</code>整型运算性能为<code>1.25DMIPS/MHz</code> .<br><img src="/images/delay_us/O0.png"><br>非常凑巧的是：</p>
+<pre><code>    设 HAL_RCC_GetHCLKFreq() = f ，N = f / delay .
+    则单位延时Time = [5 * (f / N)] / (1.25 * f) = 5 / (1.25 * N),Uint:us .
+
+故取`N = 4000000`恰好为`1us` .
+</code></pre>
+</li>
+<li><p>仔细编译优化等级 - <code>O1</code>级优化，指令变少 .<br><img src="/images/delay_us/O1.png"> - <code>O2</code>级优化，只有一句跳转，不执行<code>while</code> .<br><img src="/images/delay_us/O2.png"></p>
+</li>
+</ul>
+<h2 id="Hal-库通用"><a href="#Hal-库通用" class="headerlink" title="Hal 库通用"></a>Hal 库通用</h2><pre><code class="c">    #define CPU_FREQUENCY_MHZ    184		// STM32系统时钟主频
+    void HAL_Delay_us(__IO uint32_t delay)
+    &#123;
+        int last, curr, val;
+        int temp;
+
+        while (delay != 0)
+        &#123;
+            temp = delay &gt; 900 ? 900 : delay;
+            last = SysTick-&gt;VAL;
+            curr = last - CPU_FREQUENCY_MHZ * temp;
+            if (curr &gt;= 0)
+            &#123;
+                do
+                &#123;
+                    val = SysTick-&gt;VAL;
+                &#125;
+                while ((val &lt; last) &amp;&amp; (val &gt;= curr));
+            &#125;
+            else
+            &#123;
+                curr += CPU_FREQUENCY_MHZ * 1000;
+                do
+                &#123;
+                    val = SysTick-&gt;VAL;
+                &#125;
+                while ((val &lt;= last) || (val &gt; curr));
+            &#125;
+            delay -= temp;
+        &#125;
+    &#125;
+</code></pre>
+<h3 id="备注-1"><a href="#备注-1" class="headerlink" title="备注"></a>备注</h3><blockquote>
+<p>关于 SysTick 可参考 ST 的 CM3 内核手册 PM0056 Programming manual .</p>
+</blockquote>
+<p><code>SysTick-&gt;LOAD</code> 的值应为 <code>(CPU_FREQUENCY_MHZ * 1000) -1</code> 在此条件下 <code>SysTick</code> 1μs 自减，1ms 重载 .</p>
+<p>当传入<code>delay</code>参数时，对其按照 temp 进行拆分———因为 VAL 不会超过<code>1000</code> .</p>
+<p>对拆分后的<code>delay</code>分段延时:<code>(delay/temp)*temp + delay%temp</code> .</p>
+<ol>
+<li>当<code>curr</code> ≥ 0 时<br><img src="/images/delay_us/curr+.png"></li>
+</ol>
+<p>通过<code>(val &lt; last) &amp;&amp; (val &gt;= curr)</code>来实现一次 temp 延时.</p>
+<ol start="2">
+<li>当<code>curr</code> ＜ 0 时<br><img src="/images/delay_us/curr-1.png"></li>
+</ol>
+<p>执行<code>curr += CPU_FREQUENCY_MHZ * 1000</code><br><img src="/images/delay_us/curr-2.png"></p>
+<p>通过<code>(val &lt;= last) || (val &gt; curr)</code>来实现一次 temp 延时.</p>
+<h2 id="全通用"><a href="#全通用" class="headerlink" title="全通用"></a>全通用</h2><p>(这里是 HAL 写法)，但需要占用一个定时器 .</p>
+<pre><code class="c">    #define DLY_TIM_Handle (&amp;htimx)
+    void delay_us(uint16_t nus)
+    &#123;
+        __HAL_TIM_SET_COUNTER(DLY_TIM_Handle, 0);
+        __HAL_TIM_ENABLE(DLY_TIM_Handle);
+        while (__HAL_TIM_GET_COUNTER(DLY_TIM_Handle) &lt; nus)
+        &#123;
+            ;
+        &#125;
+        __HAL_TIM_DISABLE(DLY_TIM_Handle);
+    &#125;
+</code></pre>
+<h3 id="仔细"><a href="#仔细" class="headerlink" title="仔细"></a>仔细</h3><p>设置 TIMx 的计数周期为 1μs,实现<code>delay_us</code> .</p>
+]]></content>
+      <categories>
+        <category>MCU</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Embedded IDE</title>
     <url>/2024/04/17/EIDE/</url>
     <content><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>没序</p>
@@ -235,6 +235,31 @@
 </blockquote>
 <ul>
 <li><code>3.16.0</code>版本中删除了自动生成<code>launch.json</code>调试配置的功能，取而代之的是菜单栏中的<code>Generate Cortex-Debug Configuration</code><br><img src="/images/EIDE/debug_menu.png"></li>
+</ul>
+]]></content>
+      <categories>
+        <category>MCU</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>在RAM中调试</title>
+    <url>/2024/05/01/RAM_debug/</url>
+    <content><![CDATA[<h1 id="在-RAM-中调试的好处？"><a href="#在-RAM-中调试的好处？" class="headerlink" title="在 RAM 中调试的好处？"></a>在 RAM 中调试的好处？</h1><h2 id="FLASH-的擦除寿命"><a href="#FLASH-的擦除寿命" class="headerlink" title="FLASH 的擦除寿命"></a>FLASH 的擦除寿命</h2><p>需要了解的是<code>FLASH</code>的擦除次数有限，例如：<code>STM32g0xx</code>的擦除耐力大约在<code>10K</code>次。<br><img src="/images/RAM_Debug/FLASH_endurance.png"></p>
+<p>而每次烧录程序是会对 部分 &#x2F; 所有 扇区进行擦除然后再写入的，即使<code>10K</code>是一个较大的值，但更具有优势的是把程序放在<code>RAM</code>中运行，并不用担心擦除耐力这个问题。而且，在<code>RAM</code>中烧录程序会非常迅速，因此省去了擦除<code>FLASH</code>操作所带来的时间。</p>
+<h1 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h1><h2 id="设置启动地址"><a href="#设置启动地址" class="headerlink" title="设置启动地址"></a>设置启动地址</h2><p>在<code>STM32</code>中可以设置 <code>BOOT</code>引脚 &#x2F; 选项字节 使<code>MCU</code>在不同的地址区域上电运行。</p>
+<ul>
+<li>通过<code>BOOTx</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Pin.png"></li>
+<li>通过<code>BOOT</code>和<code>选项字节</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Reg.png"></li>
+</ul>
+<h2 id="链接设置"><a href="#链接设置" class="headerlink" title="链接设置"></a>链接设置</h2><p>虽然设置了<code>MCU</code>上电在<code>RAM</code>中启动，但是需要仔细的是编译之后生成的文件并没有全部正确的链接到<code>RAM</code>所属的地址当中。这时需要修改<code>ld</code>文件,将<strong>所有</strong>的分区映射到<code>RAM</code>当中。</p>
+<ul>
+<li>这里仅演示部分修改。<br><img src="/images/RAM_Debug/Chang_ld.png"></li>
+</ul>
+<p>修改之后，编译输出信息里会观察到<code>FLASH</code>占用为<code>0%</code>。<br><img src="/images/RAM_Debug/Build.png"></p>
+<h2 id="Debug-设置"><a href="#Debug-设置" class="headerlink" title="Debug 设置"></a>Debug 设置</h2><p>如果顺利完成上述中<code>设置启动地址</code>和<code>链接设置</code>这两步，并且烧录后进行软复位（复位 PC 等寄存器），程序会正常运行，但是看上去似乎和在<code>FLASH</code>中运行没有区别。因为即便是烧录到<code>FLASH</code>中，程序也会“搬移”到<code>RAM</code>中运行，所以大多数情况在<code>RAM</code>或者<code>FLASH</code>中调试结果区别不大。</p>
+<p>那如何判断之前的工作是否成功呢？一个有效的办法是在程序运行时，观察<code>PC</code>的值是否在<code>RAM</code>所属的地址区域内。</p>
+<ul>
+<li>在示例图中：PC 值为<code>0x20000226</code>，值得高兴的是，这属于<code>RAM</code>的地址。<br><img src="/images/RAM_Debug/PC_Value.png"></li>
 </ul>
 ]]></content>
       <categories>
@@ -300,13 +325,13 @@ L = (Vin - Vout) * D / fsw * r * Iload
   <entry>
     <title>SSD1306</title>
     <url>/2023/10/20/SSD1306/</url>
-    <content><![CDATA[<h1 id="了解I2C"><a href="#了解I2C" class="headerlink" title="了解I2C"></a>了解I2C</h1><p>飞利浦（NXP）于1980提出<code>I2C</code>串行总线，使用多主从架构，为同步半双工通信方式 .<br>常见速率：100kbps、300kbps、3.4Mbps .</p>
+    <content><![CDATA[<h1 id="了解-I2C"><a href="#了解-I2C" class="headerlink" title="了解 I2C"></a>了解 I2C</h1><p>飞利浦（NXP）于 1980 提出<code>I2C</code>串行总线，使用多主从架构，为同步半双工通信方式 .<br>常见速率：100kbps、300kbps、3.4Mbps .</p>
 <!-- 此处需要介绍I2C的硬件配置 -->
 
-<h2 id="端口设置"><a href="#端口设置" class="headerlink" title="端口设置"></a>端口设置</h2><p>采用外部上拉（强上拉）时，端口配置为开漏输出，配合上拉电阻（1K左右）以输出高电平 .</p>
-<h2 id="I2C的数据有效性"><a href="#I2C的数据有效性" class="headerlink" title="I2C的数据有效性"></a>I2C的数据有效性</h2><p><img src="/images/sw_i2c/I2C%E6%95%B0%E6%8D%AE%E6%9C%89%E6%95%88%E6%80%A7.png"></p>
+<h2 id="端口设置"><a href="#端口设置" class="headerlink" title="端口设置"></a>端口设置</h2><p>采用外部上拉（强上拉）时，端口配置为开漏输出，配合上拉电阻（1K 左右）以输出高电平 .</p>
+<h2 id="I2C-的数据有效性"><a href="#I2C-的数据有效性" class="headerlink" title="I2C 的数据有效性"></a>I2C 的数据有效性</h2><p><img src="/images/sw_i2c/I2C%E6%95%B0%E6%8D%AE%E6%9C%89%E6%95%88%E6%80%A7.png"></p>
 <p>在传输期间，<code>SCL</code>为高电平时数据有效，数据的切换只能在<code>SCL</code>为低电平时进行 .</p>
-<h2 id="I2C的START和STOP信号"><a href="#I2C的START和STOP信号" class="headerlink" title="I2C的START和STOP信号"></a>I2C的START和STOP信号</h2><p><img src="/images/sw_i2c/I2C%E5%90%AF%E5%8A%A8%E5%92%8C%E7%BB%93%E6%9D%9F%E4%BF%A1%E5%8F%B7.png"></p>
+<h2 id="I2C-的-START-和-STOP-信号"><a href="#I2C-的-START-和-STOP-信号" class="headerlink" title="I2C 的 START 和 STOP 信号"></a>I2C 的 START 和 STOP 信号</h2><p><img src="/images/sw_i2c/I2C%E5%90%AF%E5%8A%A8%E5%92%8C%E7%BB%93%E6%9D%9F%E4%BF%A1%E5%8F%B7.png"></p>
 <pre><code class="c">    void IIC_Start(void)
     &#123;
         SDA_HIGH;
@@ -322,9 +347,9 @@ L = (Vin - Vout) * D / fsw * r * Iload
         SDA_HIGH;
     &#125;
 </code></pre>
-<h2 id="I2C的ACK应答信号"><a href="#I2C的ACK应答信号" class="headerlink" title="I2C的ACK应答信号"></a>I2C的ACK应答信号</h2><p><img src="/images/sw_i2c/I2C_ACK.png"></p>
-<p><code>START</code>之后，在接下来的8个CLK中，<code>SDA</code>进行一次8bit的数据传输，若接收到数据，则在第9个CLK对<code>SDA</code>拉低，将其视作一次<code>ACK</code>应答信号 .</p>
-<h3 id="发送ACK的方式参考"><a href="#发送ACK的方式参考" class="headerlink" title="发送ACK的方式参考"></a>发送ACK的方式参考</h3><pre><code class="c">    void IIC_SendAck(u8 ACK_Byte)
+<h2 id="I2C-的-ACK-应答信号"><a href="#I2C-的-ACK-应答信号" class="headerlink" title="I2C 的 ACK 应答信号"></a>I2C 的 ACK 应答信号</h2><p><img src="/images/sw_i2c/I2C_ACK.png"></p>
+<p><code>START</code>之后，在接下来的 8 个 CLK 中，<code>SDA</code>进行一次 8bit 的数据传输，若接收到数据，则在第 9 个 CLK 对<code>SDA</code>拉低，将其视作一次<code>ACK</code>应答信号 .</p>
+<h3 id="发送-ACK-的方式参考"><a href="#发送-ACK-的方式参考" class="headerlink" title="发送 ACK 的方式参考"></a>发送 ACK 的方式参考</h3><pre><code class="c">    void IIC_SendAck(uint8_t ACK_Byte)
     &#123;
         if(ACK_Byte == 1)
             SDA_HIGH;
@@ -334,9 +359,9 @@ L = (Vin - Vout) * D / fsw * r * Iload
         SCL_LOW;
     &#125;
 </code></pre>
-<h3 id="接受ACK方式参考"><a href="#接受ACK方式参考" class="headerlink" title="接受ACK方式参考"></a>接受ACK方式参考</h3><pre><code class="c">    u8 IIC_ReceiveAck(void)
+<h3 id="接受-ACK-方式参考"><a href="#接受-ACK-方式参考" class="headerlink" title="接受 ACK 方式参考"></a>接受 ACK 方式参考</h3><pre><code class="c">    uint8_t IIC_ReceiveAck(void)
     &#123;
-        u8 ACK_Byte;
+        uint8_t ACK_Byte;
         SDA_HIGH;//主机释放，从机接管
         SCL_HIGH;
         ACK_Byte = READ_SDA;
@@ -344,10 +369,10 @@ L = (Vin - Vout) * D / fsw * r * Iload
         return ACK_Byte;
     &#125;
 </code></pre>
-<h2 id="I2C读写1Byte数据"><a href="#I2C读写1Byte数据" class="headerlink" title="I2C读写1Byte数据"></a>I2C读写1Byte数据</h2><h3 id="写数据的方式参考"><a href="#写数据的方式参考" class="headerlink" title="写数据的方式参考"></a>写数据的方式参考</h3><pre><code class="c">    void IIC_WriteByte(u8 IIC_Byte)
+<h2 id="I2C-读写-1Byte-数据"><a href="#I2C-读写-1Byte-数据" class="headerlink" title="I2C 读写 1Byte 数据"></a>I2C 读写 1Byte 数据</h2><h3 id="写数据的方式参考"><a href="#写数据的方式参考" class="headerlink" title="写数据的方式参考"></a>写数据的方式参考</h3><pre><code class="c">    void IIC_WriteByte(uint8_t IIC_Byte)
     &#123;
-        u8 i;
-        u8 data = IIC_Byte;
+        uint8_t i;
+        uint8_t data = IIC_Byte;
         SCL_LOW;
         for(i=0;i&lt;8;i++)
         &#123;
@@ -361,9 +386,9 @@ L = (Vin - Vout) * D / fsw * r * Iload
         &#125;
     &#125;
 </code></pre>
-<h3 id="读数据的方式参考"><a href="#读数据的方式参考" class="headerlink" title="读数据的方式参考"></a>读数据的方式参考</h3><pre><code class="c">    u8 IIC_ReadByte(void)
+<h3 id="读数据的方式参考"><a href="#读数据的方式参考" class="headerlink" title="读数据的方式参考"></a>读数据的方式参考</h3><pre><code class="c">    uint8_t IIC_ReadByte(void)
     &#123;
-        u8 i,IIC_Byte = 0x00;
+        uint8_t i,IIC_Byte = 0x00;
         SDA_HIGH;//主机释放，从机接管  --这里的SDA,SCL都是推挽输出
         for(i=0;i&lt;8;i++)
         &#123;
@@ -375,18 +400,18 @@ L = (Vin - Vout) * D / fsw * r * Iload
         return IIC_Byte;
     &#125;
 </code></pre>
-<h1 id="了解SSD1306"><a href="#了解SSD1306" class="headerlink" title="了解SSD1306"></a>了解SSD1306</h1><h2 id="SSD1306使用I2C的数据格式"><a href="#SSD1306使用I2C的数据格式" class="headerlink" title="SSD1306使用I2C的数据格式"></a>SSD1306使用I2C的数据格式</h2><p><img src="/images/sw_i2c/I2C%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F.png"></p>
+<h1 id="了解-SSD1306"><a href="#了解-SSD1306" class="headerlink" title="了解 SSD1306"></a>了解 SSD1306</h1><h2 id="SSD1306-使用-I2C-的数据格式"><a href="#SSD1306-使用-I2C-的数据格式" class="headerlink" title="SSD1306 使用 I2C 的数据格式"></a>SSD1306 使用 I2C 的数据格式</h2><p><img src="/images/sw_i2c/I2C%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F.png"></p>
 <h3 id="首字节"><a href="#首字节" class="headerlink" title="首字节"></a>首字节</h3><p>由从机地址<code>0x3C</code>和<code>R/W#</code>组成 .</p>
 <pre><code class="c">        IIC_WriteByte(0x78);//W
         IIC_WriteByte(0x79);//R
 </code></pre>
-<h3 id="控制字节"><a href="#控制字节" class="headerlink" title="控制字节"></a>控制字节</h3><p>由<code>Co</code>和<code>D/C#</code>及<code>000000</code>组成，<code>Co</code>低电平意指后续的Byte都是数据，可用于连续输出 CMD 和 DATA .</p>
+<h3 id="控制字节"><a href="#控制字节" class="headerlink" title="控制字节"></a>控制字节</h3><p>由<code>Co</code>和<code>D/C#</code>及<code>000000</code>组成，<code>Co</code>低电平意指后续的 Byte 都是数据，可用于连续输出 CMD 和 DATA .</p>
 <pre><code class="c">        IIC_WriteByte(0x00);//后面的字节是命令
         IIC_WriteByte(0x40);//后面的字节是数据，并存入GDDRAM
         IIC_WriteByte(0x80);//后一位字节是命令
         IIC_WriteByte(0xC0);//后一位字节是数据，并存入GDDRAM
 </code></pre>
-<h3 id="写一次命令"><a href="#写一次命令" class="headerlink" title="写一次命令"></a>写一次命令</h3><pre><code class="c">    void OLED_CMD(u8 CMD)
+<h3 id="写一次命令"><a href="#写一次命令" class="headerlink" title="写一次命令"></a>写一次命令</h3><pre><code class="c">    void OLED_CMD(uint8_t CMD)
     &#123;
         IIC_Start();
 
@@ -409,50 +434,19 @@ L = (Vin - Vout) * D / fsw * r * Iload
 <p><img src="/images/sw_i2c/I2C_logic.png"></p>
 <p>观察屏幕，情况如下：</p>
 <p><img src="/images/sw_i2c/12864_ON.jpg"></p>
-<p>屏幕被成功点亮，并将GDDRAM中的初始数据输出 .</p>
-<h3 id="快速刷屏"><a href="#快速刷屏" class="headerlink" title="快速刷屏"></a>快速刷屏</h3><pre><code class="c">    void OLED_ClearScreen(void)
-    &#123;
-        OLED_DATA_128_64(0x00);
-    &#125;
-
-    void OLED_FillScreen(void)
-    &#123;
-        OLED_DATA_128_64(0xFF);
-    &#125;
-
-    void OLED_DATA_128_64(u8 DATA_128_64)
-    &#123;
-        u16 i;
-        
-        IIC_Start();
-        
-        IIC_WriteByte(0x78);//从机地址0111100和R/W#
-        IIC_ReceiveAck();
-
-        IIC_WriteByte(0x40);
-        IIC_ReceiveAck();
-
-        for(i=0;i&lt;128*8;i++)
-        &#123;
-            IIC_WriteByte(DATA_128_64);
-            IIC_ReceiveAck();
-        &#125;
-        
-        IIC_Stop();
-    &#125;
-</code></pre>
-<h2 id="SSD1306的GDDRAM"><a href="#SSD1306的GDDRAM" class="headerlink" title="SSD1306的GDDRAM"></a>SSD1306的GDDRAM</h2><h3 id="GDDRAM结构"><a href="#GDDRAM结构" class="headerlink" title="GDDRAM结构"></a>GDDRAM结构</h3><p><img src="/images/sw_i2c/SSD1306_GDDRAM.png"></p>
-<p>从上至下，将GDDRAM分为8个PAGE，<code>8 * 128 Byte</code><br>从左至右，将PAGE分为128个SEG，<code>128 * 1 Byte</code></p>
-<p><img src="/images/sw_i2c/GDDRAM_DATA.png"><br>写入GDDRAM的Byte,最低位D0在顶行，最高位D7在底行 .</p>
-<h3 id="GDDRAM的寻址模式"><a href="#GDDRAM的寻址模式" class="headerlink" title="GDDRAM的寻址模式"></a>GDDRAM的寻址模式</h3><p><code>20h+A[1:0]</code>        设置内存寻址模式</p>
+<p>屏幕被成功点亮，并将 GDDRAM 中的初始数据输出 .</p>
+<h2 id="SSD1306-的-GDDRAM"><a href="#SSD1306-的-GDDRAM" class="headerlink" title="SSD1306 的 GDDRAM"></a>SSD1306 的 GDDRAM</h2><h3 id="GDDRAM-结构"><a href="#GDDRAM-结构" class="headerlink" title="GDDRAM 结构"></a>GDDRAM 结构</h3><p><img src="/images/sw_i2c/SSD1306_GDDRAM.png"></p>
+<p>从上至下，将 GDDRAM 分为 8 个 PAGE，<code>8 * 128 Byte</code><br>从左至右，将 PAGE 分为 128 个 SEG，<code>128 * 1 Byte</code></p>
+<p><img src="/images/sw_i2c/GDDRAM_DATA.png"><br>写入 GDDRAM 的 Byte,最低位 D0 在顶行，最高位 D7 在底行 .</p>
+<h3 id="GDDRAM-的寻址模式"><a href="#GDDRAM-的寻址模式" class="headerlink" title="GDDRAM 的寻址模式"></a>GDDRAM 的寻址模式</h3><p><code>20h+A[1:0]</code> 设置内存寻址模式</p>
 <ol>
-<li><p><code>A[1:0]=10b</code>	页面寻址    用于局部刷新<br> 仅在PAGE中寻址 .向GDDRAM写入1Byte后，列指针自增1，直至寻址结束，页指针不变 .<br><img src="/images/sw_i2c/%E9%A1%B5%E9%9D%A2%E5%AF%BB%E5%9D%80.png"></p>
+<li><p><code>A[1:0]=10b</code> 页面寻址 用于局部刷新<br>仅在 PAGE 中寻址 .向 GDDRAM 写入 1Byte 后，列指针自增 1，直至寻址结束，页指针不变 .<br><img src="/images/sw_i2c/%E9%A1%B5%E9%9D%A2%E5%AF%BB%E5%9D%80.png"></p>
 </li>
-<li><p><code>A[1:0]=00b</code>	水平寻址<br><img src="/images/sw_i2c/%E6%B0%B4%E5%B9%B3%E5%AF%BB%E5%9D%80.png"></p>
+<li><p><code>A[1:0]=00b</code> 水平寻址<br><img src="/images/sw_i2c/%E6%B0%B4%E5%B9%B3%E5%AF%BB%E5%9D%80.png"></p>
 </li>
-<li><p><code>A[1:0]=01b</code>	竖直寻址<br><img src="/images/sw_i2c/%E7%AB%96%E7%9B%B4%E5%AF%BB%E5%9D%80.png"></p>
+<li><p><code>A[1:0]=01b</code> 竖直寻址<br><img src="/images/sw_i2c/%E7%AB%96%E7%9B%B4%E5%AF%BB%E5%9D%80.png"></p>
 </li>
-<li><p><code>A[1:0]=11b</code>	无效寻址</p>
+<li><p><code>A[1:0]=11b</code> 无效寻址</p>
 </li>
 </ol>
 <h3 id="填充全屏"><a href="#填充全屏" class="headerlink" title="填充全屏"></a>填充全屏</h3><pre><code class="c">    OLED_FILL（）
@@ -466,7 +460,7 @@ L = (Vin - Vout) * D / fsw * r * Iload
         OLED_CMD(0X00);		// 页起始地址 0
         OLED_CMD(0X07);		// 页终止地址 7
 
-        u8 r,c;
+        uint8_t r,c;
 
         for(r=0;r&lt;8;r++)
             for(c=0;c&lt;128;c++)
@@ -476,31 +470,6 @@ L = (Vin - Vout) * D / fsw * r * Iload
 <h2 id="命令列表"><a href="#命令列表" class="headerlink" title="命令列表"></a>命令列表</h2><h3 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h3><p><img src="/images/sw_i2c/%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4.png"></p>
 <h3 id="滚动命令"><a href="#滚动命令" class="headerlink" title="滚动命令"></a>滚动命令</h3><p><img src="/images/sw_i2c/26.png"></p>
 <h3 id="11-8"><a href="#11-8" class="headerlink" title="11&#x2F;8"></a>11&#x2F;8</h3><p><img src="/images/%E9%B8%BD%E5%AD%90.png"></p>
-]]></content>
-      <categories>
-        <category>MCU</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>在RAM中调试</title>
-    <url>/2024/05/01/RAM_debug/</url>
-    <content><![CDATA[<h1 id="在-RAM-中调试的好处？"><a href="#在-RAM-中调试的好处？" class="headerlink" title="在 RAM 中调试的好处？"></a>在 RAM 中调试的好处？</h1><h2 id="FLASH-的擦除寿命"><a href="#FLASH-的擦除寿命" class="headerlink" title="FLASH 的擦除寿命"></a>FLASH 的擦除寿命</h2><p>需要了解的是<code>FLASH</code>的擦除次数有限，例如：<code>STM32g0xx</code>的擦除耐力大约在<code>10K</code>次。<br><img src="/images/RAM_Debug/FLASH_endurance.png"></p>
-<p>而每次烧录程序是会对 部分 &#x2F; 所有 扇区进行擦除然后再写入的，即使<code>10K</code>是一个较大的值，但更具有优势的是把程序放在<code>RAM</code>中运行，并不用担心擦除耐力这个问题。而且，在<code>RAM</code>中烧录程序会非常迅速，因此省去了擦除<code>FLASH</code>操作所带来的时间。</p>
-<h1 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h1><h2 id="设置启动地址"><a href="#设置启动地址" class="headerlink" title="设置启动地址"></a>设置启动地址</h2><p>在<code>STM32</code>中可以设置 <code>BOOT</code>引脚 &#x2F; 选项字节 使<code>MCU</code>在不同的地址区域上电运行。</p>
-<ul>
-<li>通过<code>BOOTx</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Pin.png"></li>
-<li>通过<code>BOOT</code>和<code>选项字节</code>来设置启动地址。<br><img src="/images/RAM_Debug/BOOT_Reg.png"></li>
-</ul>
-<h2 id="链接设置"><a href="#链接设置" class="headerlink" title="链接设置"></a>链接设置</h2><p>虽然设置了<code>MCU</code>上电在<code>RAM</code>中启动，但是需要仔细的是编译之后生成的文件并没有全部正确的链接到<code>RAM</code>所属的地址当中。这时需要修改<code>ld</code>文件,将<strong>所有</strong>的分区映射到<code>RAM</code>当中。</p>
-<ul>
-<li>这里仅演示部分修改。<br><img src="/images/RAM_Debug/Chang_ld.png"></li>
-</ul>
-<p>修改之后，编译输出信息里会观察到<code>FLASH</code>占用为<code>0%</code>。<br><img src="/images/RAM_Debug/Build.png"></p>
-<h2 id="Debug-设置"><a href="#Debug-设置" class="headerlink" title="Debug 设置"></a>Debug 设置</h2><p>如果顺利完成上述中<code>设置启动地址</code>和<code>链接设置</code>这两步，并且烧录后进行软复位（复位 PC 等寄存器），程序会正常运行，但是看上去似乎和在<code>FLASH</code>中运行没有区别。因为即便是烧录到<code>FLASH</code>中，程序也会“搬移”到<code>RAM</code>中运行，所以大多数情况在<code>RAM</code>或者<code>FLASH</code>中调试结果区别不大。</p>
-<p>那如何判断之前的工作是否成功呢？一个有效的办法是在程序运行时，观察<code>PC</code>的值是否在<code>RAM</code>所属的地址区域内。</p>
-<ul>
-<li>在示例图中：PC 值为<code>0x20000226</code>，值得高兴的是，这属于<code>RAM</code>的地址。<br><img src="/images/RAM_Debug/PC_Value.png"></li>
-</ul>
 ]]></content>
       <categories>
         <category>MCU</category>

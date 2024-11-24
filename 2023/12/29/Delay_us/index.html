@@ -168,7 +168,7 @@
 <blockquote>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq153471503/article/details/102930097">https://blog.csdn.net/qq153471503/article/details/102930097</a></p>
 </blockquote>
-<h2 id="F1系列-72M"><a href="#F1系列-72M" class="headerlink" title="F1系列(72M)"></a>F1系列(72M)</h2><pre><code class="c">    void delay_us(uint32_t us)
+<h2 id="F1-系列-72M"><a href="#F1-系列-72M" class="headerlink" title="F1 系列(72M)"></a>F1 系列(72M)</h2><pre><code class="c">    void delay_us(uint32_t us)
     &#123;
         uint32_t delay = (HAL_RCC_GetHCLKFreq() / 4000000 * us);
         while (delay--)
@@ -178,20 +178,17 @@
     &#125;
 </code></pre>
 <h3 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h3><ul>
-<li><p>delay的计算<br>使用<code>GCC -O0</code>编译显示，在<code>while</code>中需要重复执行5条指令，而<code>M3</code>内核的<code>STM32</code>整型运算性能为<code>1.25DMIPS/MHz</code> .<br><img src="/images/delay_us/O0.png"><br>非常凑巧的是：</p>
-<pre><code>  设 HAL_RCC_GetHCLKFreq() = f ，N = f / delay .
-  则单位延时Time = [5 * (f / N)] / (1.25 * f) = 5 / (1.25 * N),Uint:us .
+<li><p><code>delay</code> 的计算<br>使用<code>GCC -O0</code>编译显示，在<code>while</code>中需要重复执行 5 条指令，而<code>M3</code>内核的<code>STM32</code>整型运算性能为<code>1.25DMIPS/MHz</code> .<br><img src="/images/delay_us/O0.png"><br>非常凑巧的是：</p>
+<pre><code>    设 HAL_RCC_GetHCLKFreq() = f ，N = f / delay .
+    则单位延时Time = [5 * (f / N)] / (1.25 * f) = 5 / (1.25 * N),Uint:us .
+
+故取`N = 4000000`恰好为`1us` .
 </code></pre>
-<p>  故取<code>N = 4000000</code>恰好为<code>1us</code> .</p>
 </li>
-<li><p>仔细编译优化等级</p>
-<ul>
-<li><code>O1</code>级优化，指令变少 .<br><img src="/images/delay_us/O1.png"></li>
-<li><code>O2</code>级优化，只有一句跳转，不执行<code>while</code> .<br><img src="/images/delay_us/O2.png"></li>
-</ul>
+<li><p>仔细编译优化等级 - <code>O1</code>级优化，指令变少 .<br><img src="/images/delay_us/O1.png"> - <code>O2</code>级优化，只有一句跳转，不执行<code>while</code> .<br><img src="/images/delay_us/O2.png"></p>
 </li>
 </ul>
-<h2 id="Hal库通用"><a href="#Hal库通用" class="headerlink" title="Hal库通用"></a>Hal库通用</h2><pre><code class="c">    #define CPU_FREQUENCY_MHZ    184		// STM32系统时钟主频
+<h2 id="Hal-库通用"><a href="#Hal-库通用" class="headerlink" title="Hal 库通用"></a>Hal 库通用</h2><pre><code class="c">    #define CPU_FREQUENCY_MHZ    184		// STM32系统时钟主频
     void HAL_Delay_us(__IO uint32_t delay)
     &#123;
         int last, curr, val;
@@ -224,21 +221,21 @@
     &#125;
 </code></pre>
 <h3 id="备注-1"><a href="#备注-1" class="headerlink" title="备注"></a>备注</h3><blockquote>
-<p>关于 SysTick可参考ST的CM3内核手册PM0056 Programming manual .</p>
+<p>关于 SysTick 可参考 ST 的 CM3 内核手册 PM0056 Programming manual .</p>
 </blockquote>
-<p><code>SysTick-&gt;LOAD</code> 的值应为 <code>(CPU_FREQUENCY_MHZ * 1000) -1</code> 在此条件下 <code>SysTick</code> 1μs自减，1ms重载 .</p>
-<p>当传入<code>delay</code>参数时，对其按照temp进行拆分———因为VAL不会超过<code>1000</code> .</p>
+<p><code>SysTick-&gt;LOAD</code> 的值应为 <code>(CPU_FREQUENCY_MHZ * 1000) -1</code> 在此条件下 <code>SysTick</code> 1μs 自减，1ms 重载 .</p>
+<p>当传入<code>delay</code>参数时，对其按照 temp 进行拆分———因为 VAL 不会超过<code>1000</code> .</p>
 <p>对拆分后的<code>delay</code>分段延时:<code>(delay/temp)*temp + delay%temp</code> .</p>
 <ol>
-<li>当<code>curr</code> ≥ 0时<br><img src="/images/delay_us/curr+.png"></li>
+<li>当<code>curr</code> ≥ 0 时<br><img src="/images/delay_us/curr+.png"></li>
 </ol>
-<p>  通过<code>(val &lt; last) &amp;&amp; (val &gt;= curr)</code>来实现一次temp延时.</p>
+<p>通过<code>(val &lt; last) &amp;&amp; (val &gt;= curr)</code>来实现一次 temp 延时.</p>
 <ol start="2">
-<li>当<code>curr</code> ＜ 0时<br><img src="/images/delay_us/curr-1.png"></li>
+<li>当<code>curr</code> ＜ 0 时<br><img src="/images/delay_us/curr-1.png"></li>
 </ol>
-<p>  执行<code>curr += CPU_FREQUENCY_MHZ * 1000</code><br><img src="/images/delay_us/curr-2.png"></p>
-<p>  通过<code>(val &lt;= last) || (val &gt; curr)</code>来实现一次temp延时.</p>
-<h2 id="全通用"><a href="#全通用" class="headerlink" title="全通用"></a>全通用</h2><p>(这里是HAL写法)，但需要占用一个定时器 .</p>
+<p>执行<code>curr += CPU_FREQUENCY_MHZ * 1000</code><br><img src="/images/delay_us/curr-2.png"></p>
+<p>通过<code>(val &lt;= last) || (val &gt; curr)</code>来实现一次 temp 延时.</p>
+<h2 id="全通用"><a href="#全通用" class="headerlink" title="全通用"></a>全通用</h2><p>(这里是 HAL 写法)，但需要占用一个定时器 .</p>
 <pre><code class="c">    #define DLY_TIM_Handle (&amp;htimx)
     void delay_us(uint16_t nus)
     &#123;
@@ -251,7 +248,7 @@
         __HAL_TIM_DISABLE(DLY_TIM_Handle);
     &#125;
 </code></pre>
-<h3 id="备注-2"><a href="#备注-2" class="headerlink" title="备注"></a>备注</h3><p>设置TIMx的计数周期为1μs,实现<code>delay_us</code> .</p>
+<h3 id="仔细"><a href="#仔细" class="headerlink" title="仔细"></a>仔细</h3><p>设置 TIMx 的计数周期为 1μs,实现<code>delay_us</code> .</p>
 
     </div>
     
