@@ -5,7 +5,7 @@
     <url>/2023/08/14/About%20me/</url>
     <content><![CDATA[<h3 id="欢迎来到-lovely-lili’s-Blog"><a href="#欢迎来到-lovely-lili’s-Blog" class="headerlink" title="欢迎来到 lovely-lili’s Blog"></a>欢迎来到 lovely-lili’s Blog</h3><h4 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h4><p>我是笠笠，<code>EE</code>专业的在读大四</p>
 <blockquote>
-<p>欢迎与我交流一些电子技术哦！ <a href="mailto:&#x73;&#105;&#x78;&#105;&#x61;&#110;&#x2e;&#119;&#x40;&#113;&#x71;&#x2e;&#x63;&#111;&#x6d;">&#x73;&#105;&#x78;&#105;&#x61;&#110;&#x2e;&#119;&#x40;&#113;&#x71;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>欢迎与我交流一些电子技术哦！ <a href="mailto:&#115;&#x69;&#120;&#x69;&#97;&#110;&#46;&#x77;&#x40;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;">&#115;&#x69;&#120;&#x69;&#97;&#110;&#46;&#x77;&#x40;&#x71;&#113;&#x2e;&#x63;&#111;&#x6d;</a></p>
 </blockquote>
 ]]></content>
   </entry>
@@ -191,6 +191,57 @@
       </categories>
   </entry>
   <entry>
+    <title>Embedded IDE</title>
+    <url>/2024/04/17/EIDE/</url>
+    <content><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>没序</p>
+<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><blockquote>
+<p>官网下载地址：<br><a href="https://www.st.com/zh/development-tools/stm32cubemx.html">https://www.st.com/zh/development-tools/stm32cubemx.html</a></p>
+</blockquote>
+<p><code>STM32CubeMX</code>是 ST 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，支持<code>EWARM、MDK-ARM、STM32CubeIDE、Makefile</code>等样式的工程输出。<br><img src="/images/EIDE/MX_output.png"></p>
+<h2 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h2><p>同样 <code>VSC</code> 也可以在官网下载，但是通常很慢..，可以参考以下博主的下载教程。</p>
+<blockquote>
+<p>官网下载地址：<br><a href="https://code.visualstudio.com/download">https://code.visualstudio.com/download</a></p>
+</blockquote>
+<blockquote>
+<p>其他下载教程：<br><a href="https://blog.csdn.net/leah126/article/details/131661331">https://blog.csdn.net/leah126/article/details/131661331</a></p>
+</blockquote>
+<h3 id="一些基本的插件"><a href="#一些基本的插件" class="headerlink" title="一些基本的插件"></a>一些基本的插件</h3><h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的<code>EXTENSIONS</code>，搜索<code>C/C++</code>点击安装。<br><img src="/images/EIDE/C.png"></p>
+<p>选中左侧导航栏底部的<code>Manage</code>点击<code>Settings</code>搜索<code>IntelliSense</code>，可使能代码补全与配置参数。<br><img src="/images/EIDE/IntelliSense.png"></p>
+<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>在<code>EXTENSIONS</code>中，搜索<code>Cortex-Debug</code>点击安装，用来调试<code>Cortex-M</code>内核的<code>GDB</code>插件。<br><img src="/images/EIDE/Cortex-Debug.png"></p>
+<h3 id="Embedded-IDE-EIDE"><a href="#Embedded-IDE-EIDE" class="headerlink" title="Embedded IDE(EIDE)"></a>Embedded IDE(EIDE)</h3><blockquote>
+<p>官网链接:有使用教程和论坛<br><a href="https://em-ide.com/">https://em-ide.com/</a></p>
+</blockquote>
+<p>同样在<code>EXTENSIONS</code>中搜索安装<code>EIDE</code>。<br><img src="/images/EIDE/EIDE.png"></p>
+<h4 id="EIDE-的一些插件与配置"><a href="#EIDE-的一些插件与配置" class="headerlink" title="EIDE 的一些插件与配置"></a>EIDE 的一些插件与配置</h4><h5 id="Setup-Utility-Tools"><a href="#Setup-Utility-Tools" class="headerlink" title="Setup Utility Tools"></a>Setup Utility Tools</h5><p>在<code>EIDE</code>中选择左下区域的<code>OPERATIONS</code>。<br><img src="/images/EIDE/EIDE_Insert.png"></p>
+<p>点击<code>Setup Utility Tools</code>，安装相应的工具，图示是我目前下载的工具，以供参考。<br><img src="/images/EIDE/EIDE_Insert2.png"></p>
+<h5 id="绑定编译器"><a href="#绑定编译器" class="headerlink" title="绑定编译器"></a>绑定编译器</h5><p>回到<code>Manage</code>中的<code>Setting</code>，搜索<code>ARM</code>并在<code>ARMCC5、ARMCC6、GCC</code>和<code>ARM.INI</code>下方地址栏中分别填入编译器及<code>Keil MDK-ARM</code>的本地路径，使能<code>ARMCC</code>生成的<code>.axf</code>文件转成<code>.elf</code>文件。<br><img src="/images/EIDE/ARMCC.png"></p>
+<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><h3 id="1-创建-Makefile"><a href="#1-创建-Makefile" class="headerlink" title="1.创建 Makefile"></a>1.创建 Makefile</h3><p><code>Makefile</code>文件用来自动化编译<code>C/C++</code>项目。<code>Makefile</code>文件定义了一系列规则，指明了源文件的编译顺序、依赖关系等。</p>
+<p>上文提及，<code>STM32CubeMX</code>可以生成<code>Makefile</code>文件，无需开发者编写。<br><img src="/images/EIDE/STM32CubeMX_Output.png"></p>
+<h3 id="2-新建-EIDE-工程"><a href="#2-新建-EIDE-工程" class="headerlink" title="2.新建 EIDE 工程"></a>2.新建 EIDE 工程</h3><p>选中左侧导航栏的<code>EIDE</code>，点击<code>创建新工程</code>-&gt;<code>空项目</code>。<br><img src="/images/EIDE/EIDE_New.png"></p>
+<p>笔者选用的芯片是 STM32F407 系列的，故选择<code>Cortex-M Project</code>。<br><img src="/images/EIDE/core.png"></p>
+<p>需要仔细的是，此时的<code>EIDE</code>的新建工程名称应该与之前在<code>STM32CubeMX</code>设置的工程名称一致。<br><img src="/images/EIDE/prj_name.png"></p>
+<p>项目路径同样需要保持一致。<br><img src="/images/EIDE/prj_path.png"></p>
+<p>因为之前通过<code>STM32CubeMX</code>创建了项目文件，这里<code>EIDE</code>会提示是否基于已有的路径创建工程文件。<br><img src="/images/EIDE/yes1.png"><br>切换工作区。<br><img src="/images/EIDE/yes2.png"></p>
+<h3 id="3-添加-Core-与-Drivers"><a href="#3-添加-Core-与-Drivers" class="headerlink" title="3.添加 Core 与 Drivers"></a>3.添加 Core 与 Drivers</h3><p>在生成的<code>EIDE</code>工程界面中点击<code>Project Resources</code>，选择<code>Normal Folder</code>，导入<code>Core</code>与<code>Drivers</code>文件夹。<del>只导入文件也是可以的，但是不建议</del><br><img src="/images/EIDE/config2.png"></p>
+<h3 id="4-项目配置"><a href="#4-项目配置" class="headerlink" title="4.项目配置"></a>4.项目配置</h3><p>按照<code>Makefile</code>中的信息配置编译器和烧录器选项，添加<code>C</code>的宏定义。</p>
+<p>打开<code>Makefile</code>文件，并复制<code>.Id</code>文件的文件名称。<br><img src="/images/EIDE/config1.png"></p>
+<p>将链接文件名<code>STM32xxxxxxx_FLASH.ld</code>复制到选项框。<br><img src="/images/EIDE/config3.png"></p>
+<h3 id="5-编译"><a href="#5-编译" class="headerlink" title="5.编译"></a>5.编译</h3><ul>
+<li>中文路径会导致编译失败。</li>
+</ul>
+<p>编译成功后会显示内存资源占用、<code>hex</code>和<code>bin</code>文件输出路径。<br><img src="/images/EIDE/build.png"></p>
+<h3 id="6-调试"><a href="#6-调试" class="headerlink" title="6.调试"></a>6.调试</h3><blockquote>
+<p><a href="https://marketplace.visualstudio.com/items/CL.eide/changelog">https://marketplace.visualstudio.com/items/CL.eide/changelog</a></p>
+</blockquote>
+<ul>
+<li><code>3.16.0</code>版本中删除了自动生成<code>launch.json</code>调试配置的功能，取而代之的是菜单栏中的<code>Generate Cortex-Debug Configuration</code><br><img src="/images/EIDE/debug_menu.png"></li>
+</ul>
+]]></content>
+      <categories>
+        <category>MCU</category>
+      </categories>
+  </entry>
+  <entry>
     <title>BUCK的电感值计算</title>
     <url>/2023/09/08/MP2456/</url>
     <content><![CDATA[<h1 id="手册"><a href="#手册" class="headerlink" title="手册"></a>手册</h1><p>MP2456 datasheet有关于电感值的计算公式<br>下图为手册相关内容<br><img src="/images/buck/MP2456.jpg"></p>
@@ -244,57 +295,6 @@ L = (Vin - Vout) * D / fsw * r * Iload
 ]]></content>
       <categories>
         <category>开关电源</category>
-      </categories>
-  </entry>
-  <entry>
-    <title>Embedded IDE</title>
-    <url>/2024/04/17/EIDE/</url>
-    <content><![CDATA[<h1 id="序"><a href="#序" class="headerlink" title="序"></a>序</h1><p>没序</p>
-<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><blockquote>
-<p>官网下载地址：<br><a href="https://www.st.com/zh/development-tools/stm32cubemx.html">https://www.st.com/zh/development-tools/stm32cubemx.html</a></p>
-</blockquote>
-<p><code>STM32CubeMX</code>是 ST 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，支持<code>EWARM、MDK-ARM、STM32CubeIDE、Makefile</code>等样式的工程输出。<br><img src="/images/EIDE/MX_output.png"></p>
-<h2 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h2><p>同样 <code>VSC</code> 也可以在官网下载，但是通常很慢..，可以参考以下博主的下载教程。</p>
-<blockquote>
-<p>官网下载地址：<br><a href="https://code.visualstudio.com/download">https://code.visualstudio.com/download</a></p>
-</blockquote>
-<blockquote>
-<p>其他下载教程：<br><a href="https://blog.csdn.net/leah126/article/details/131661331">https://blog.csdn.net/leah126/article/details/131661331</a></p>
-</blockquote>
-<h3 id="一些基本的插件"><a href="#一些基本的插件" class="headerlink" title="一些基本的插件"></a>一些基本的插件</h3><h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的<code>EXTENSIONS</code>，搜索<code>C/C++</code>点击安装。<br><img src="/images/EIDE/C.png"></p>
-<p>选中左侧导航栏底部的<code>Manage</code>点击<code>Settings</code>搜索<code>IntelliSense</code>，可使能代码补全与配置参数。<br><img src="/images/EIDE/IntelliSense.png"></p>
-<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>在<code>EXTENSIONS</code>中，搜索<code>Cortex-Debug</code>点击安装，用来调试<code>Cortex-M</code>内核的<code>GDB</code>插件。<br><img src="/images/EIDE/Cortex-Debug.png"></p>
-<h3 id="Embedded-IDE-EIDE"><a href="#Embedded-IDE-EIDE" class="headerlink" title="Embedded IDE(EIDE)"></a>Embedded IDE(EIDE)</h3><blockquote>
-<p>官网链接:有使用教程和论坛<br><a href="https://em-ide.com/">https://em-ide.com/</a></p>
-</blockquote>
-<p>同样在<code>EXTENSIONS</code>中搜索安装<code>EIDE</code>。<br><img src="/images/EIDE/EIDE.png"></p>
-<h4 id="EIDE-的一些插件与配置"><a href="#EIDE-的一些插件与配置" class="headerlink" title="EIDE 的一些插件与配置"></a>EIDE 的一些插件与配置</h4><h5 id="Setup-Utility-Tools"><a href="#Setup-Utility-Tools" class="headerlink" title="Setup Utility Tools"></a>Setup Utility Tools</h5><p>在<code>EIDE</code>中选择左下区域的<code>OPERATIONS</code>。<br><img src="/images/EIDE/EIDE_Insert.png"></p>
-<p>点击<code>Setup Utility Tools</code>，安装相应的工具，图示是我目前下载的工具，以供参考。<br><img src="/images/EIDE/EIDE_Insert2.png"></p>
-<h5 id="绑定编译器"><a href="#绑定编译器" class="headerlink" title="绑定编译器"></a>绑定编译器</h5><p>回到<code>Manage</code>中的<code>Setting</code>，搜索<code>ARM</code>并在<code>ARMCC5、ARMCC6、GCC</code>和<code>ARM.INI</code>下方地址栏中分别填入编译器及<code>Keil MDK-ARM</code>的本地路径，使能<code>ARMCC</code>生成的<code>.axf</code>文件转成<code>.elf</code>文件。<br><img src="/images/EIDE/ARMCC.png"></p>
-<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><h3 id="1-创建-Makefile"><a href="#1-创建-Makefile" class="headerlink" title="1.创建 Makefile"></a>1.创建 Makefile</h3><p><code>Makefile</code>文件用来自动化编译<code>C/C++</code>项目。<code>Makefile</code>文件定义了一系列规则，指明了源文件的编译顺序、依赖关系等。</p>
-<p>上文提及，<code>STM32CubeMX</code>可以生成<code>Makefile</code>文件，无需开发者编写。<br><img src="/images/EIDE/STM32CubeMX_Output.png"></p>
-<h3 id="2-新建-EIDE-工程"><a href="#2-新建-EIDE-工程" class="headerlink" title="2.新建 EIDE 工程"></a>2.新建 EIDE 工程</h3><p>选中左侧导航栏的<code>EIDE</code>，点击<code>创建新工程</code>-&gt;<code>空项目</code>。<br><img src="/images/EIDE/EIDE_New.png"></p>
-<p>笔者选用的芯片是 STM32F407 系列的，故选择<code>Cortex-M Project</code>。<br><img src="/images/EIDE/core.png"></p>
-<p>需要仔细的是，此时的<code>EIDE</code>的新建工程名称应该与之前在<code>STM32CubeMX</code>设置的工程名称一致。<br><img src="/images/EIDE/prj_name.png"></p>
-<p>项目路径同样需要保持一致。<br><img src="/images/EIDE/prj_path.png"></p>
-<p>因为之前通过<code>STM32CubeMX</code>创建了项目文件，这里<code>EIDE</code>会提示是否基于已有的路径创建工程文件。<br><img src="/images/EIDE/yes1.png"><br>切换工作区。<br><img src="/images/EIDE/yes2.png"></p>
-<h3 id="3-添加-Core-与-Drivers"><a href="#3-添加-Core-与-Drivers" class="headerlink" title="3.添加 Core 与 Drivers"></a>3.添加 Core 与 Drivers</h3><p>在生成的<code>EIDE</code>工程界面中点击<code>Project Resources</code>，选择<code>Normal Folder</code>，导入<code>Core</code>与<code>Drivers</code>文件夹。<del>只导入文件也是可以的，但是不建议</del><br><img src="/images/EIDE/config2.png"></p>
-<h3 id="4-项目配置"><a href="#4-项目配置" class="headerlink" title="4.项目配置"></a>4.项目配置</h3><p>按照<code>Makefile</code>中的信息配置编译器和烧录器选项，添加<code>C</code>的宏定义。</p>
-<p>打开<code>Makefile</code>文件，并复制<code>.Id</code>文件的文件名称。<br><img src="/images/EIDE/config1.png"></p>
-<p>将链接文件名<code>STM32xxxxxxx_FLASH.ld</code>复制到选项框。<br><img src="/images/EIDE/config3.png"></p>
-<h3 id="5-编译"><a href="#5-编译" class="headerlink" title="5.编译"></a>5.编译</h3><ul>
-<li>中文路径会导致编译失败。</li>
-</ul>
-<p>编译成功后会显示内存资源占用、<code>hex</code>和<code>bin</code>文件输出路径。<br><img src="/images/EIDE/build.png"></p>
-<h3 id="6-调试"><a href="#6-调试" class="headerlink" title="6.调试"></a>6.调试</h3><blockquote>
-<p><a href="https://marketplace.visualstudio.com/items/CL.eide/changelog">https://marketplace.visualstudio.com/items/CL.eide/changelog</a></p>
-</blockquote>
-<ul>
-<li><code>3.16.0</code>版本中删除了自动生成<code>launch.json</code>调试配置的功能，取而代之的是菜单栏中的<code>Generate Cortex-Debug Configuration</code><br><img src="/images/EIDE/debug_menu.png"></li>
-</ul>
-]]></content>
-      <categories>
-        <category>MCU</category>
       </categories>
   </entry>
   <entry>
