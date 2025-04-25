@@ -1,10 +1,3 @@
-##!/bin/sh
-#本脚本请在git bash中运行
-# 作者：Huanhao
-# 在终端输入 ./push.sh 即可打开脚本
-# 博客：https://laijiahao.cn/
-
-
 echo -e "\033[32m正在为你备份博客中.........\033[0m"
 git add .
 echo -e "\033[32m正在为你备份博客中.........\033[0m"
