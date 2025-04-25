@@ -1,216 +1,206 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 7.3.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+    <meta charset="utf-8" />
+    <title>DHT20(I2C) | lovely-lily&#39;s blog</title>
+    <meta name="author" content="lovely-lily" />
+    <meta name="description" content="于道各努力 千里自同风" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
 
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
-
-  <meta name="description" content="引ASAIR 继 DHT11 推出了 DHT20 ，采用 I2C 协议通信 ，本文提供简单驱动。 引脚定义 &amp; 从机地址 数据格式 &amp; 转换DHT20 上电之后需等待 100ms 并初始化，测量时的数据格式如图示：  测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。  如数据：1c（状态字）8c 67 34 e5 2c，计算得到湿度：54.844951%RH，温度">
-<meta property="og:type" content="article">
-<meta property="og:title" content="DHT20(I2C)">
-<meta property="og:url" content="http://example.com/2024/01/29/dht20/index.html">
-<meta property="og:site_name" content="lovely-lily&#39;s blog">
-<meta property="og:description" content="引ASAIR 继 DHT11 推出了 DHT20 ，采用 I2C 协议通信 ，本文提供简单驱动。 引脚定义 &amp; 从机地址 数据格式 &amp; 转换DHT20 上电之后需等待 100ms 并初始化，测量时的数据格式如图示：  测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。  如数据：1c（状态字）8c 67 34 e5 2c，计算得到湿度：54.844951%RH，温度">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/dht20/PinSet.png">
-<meta property="og:image" content="http://example.com/images/dht20/DevAddress.png">
-<meta property="og:image" content="http://example.com/images/dht20/DataFormat.png">
-<meta property="og:image" content="http://example.com/images/dht20/RH.png">
-<meta property="og:image" content="http://example.com/images/dht20/T.png">
-<meta property="article:published_time" content="2024-01-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-25T04:22:14.332Z">
-<meta property="article:author" content="lovely-lily">
-<meta property="article:tag" content="DHT20">
-<meta property="article:tag" content="I2C">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/dht20/PinSet.png">
-
-<link rel="canonical" href="http://example.com/2024/01/29/dht20/">
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
 
-  <title>DHT20(I2C) | lovely-lily's blog</title>
-  
+
+
+<script src="/js/lib/preview.js"></script>
 
 
 
 
 
 
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">lovely-lily's blog</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-    </div>
-  </div>
-</div>
 
 
 
+<link rel="stylesheet" href="/css/main.css" />
 
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-  </ul>
-</nav>
-
-
-
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/29/dht20/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lovely-lily">
-      <meta itemprop="description" content="于道各努力 千里自同风">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="lovely-lily's blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          DHT20(I2C)
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-01-29 00:00:00" itemprop="dateCreated datePublished" datetime="2024-01-29T00:00:00+08:00">2024-01-29</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-25 12:22:14" itemprop="dateModified" datetime="2025-04-25T12:22:14+08:00">2025-04-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Hardware/" itemprop="url" rel="index"><span itemprop="name">Hardware</span></a>
-                </span>
-            </span>
-
-          
-
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>LOVELY-LILY&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;LOVELY-LILY&#39;S BLOG</span>
         </div>
-      </header>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
 
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>DHT20(I2C)</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/1/29
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Hardware/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Hardware
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/DHT20/" style="color: #ffa2c4">
+                    DHT20
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/I2C/" style="color: #03a9f4">
+                    I2C
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
+    <div class="content" v-pre>
         <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p><code>ASAIR</code> 继 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-21.html">DHT11</a> 推出了 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-67.html">DHT20</a> ，采用 <code>I2C</code> 协议通信 ，本文提供简单驱动。</p>
 <h3 id="引脚定义-从机地址"><a href="#引脚定义-从机地址" class="headerlink" title="引脚定义 &amp; 从机地址"></a>引脚定义 &amp; 从机地址</h3><p><img src="/../images/dht20/PinSet.png" alt="引脚定义"><br><img src="/../images/dht20/DevAddress.png" alt="从机地址"></p>
 <h3 id="数据格式-转换"><a href="#数据格式-转换" class="headerlink" title="数据格式 &amp; 转换"></a>数据格式 &amp; 转换</h3><p><code>DHT20</code> 上电之后需等待 <code>100ms</code> 并初始化，测量时的数据格式如图示：</p>
@@ -218,197 +208,86 @@
 <p>测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。</p>
 <p><img src="/../images/dht20/RH.png" alt="湿度计算公式"><br><img src="/../images/dht20/T.png" alt="温度计算公式"></p>
 <p>如数据：<code>1c（状态字）8c 67 34 e5 2c</code>，计算得到湿度：54.844951%<code>RH</code>，温度：11.190032<code>℃</code>.</p>
-<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int8_t</span> <span class="title function_">dht20_run</span><span class="params">(<span class="type">float</span> *pdht20)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">uint8_t</span> pt_DAT[] = &#123;<span class="number">0xAC</span>,<span class="number">0x33</span>,<span class="number">0x00</span>&#125;;</span><br><span class="line">        <span class="type">uint8_t</span> pr_DAT[<span class="number">7</span>] = &#123;<span class="number">0x00</span>&#125;;</span><br><span class="line">        <span class="type">static</span> <span class="type">char</span> init = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(init)</span><br><span class="line">        &#123;</span><br><span class="line">            HAL_Delay(<span class="number">100</span>);<span class="comment">//上电100ms等待</span></span><br><span class="line">            init -= <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        HAL_I2C_Master_Receive(&amp;hi2c1,<span class="number">0x71</span>,pr_DAT,<span class="number">1</span>,<span class="number">100</span>);<span class="comment">//读状态字</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>( (pr_DAT[<span class="number">0</span>] &amp; <span class="number">0x10</span>) &amp;&amp; (pr_DAT[<span class="number">0</span>] &amp;<span class="number">0x08</span>) )</span><br><span class="line">        &#123;</span><br><span class="line">            HAL_Delay(<span class="number">10</span>);</span><br><span class="line">            HAL_I2C_Master_Transmit(&amp;hi2c1,<span class="number">0x71</span>,pt_DAT,<span class="number">3</span>,<span class="number">100</span>);<span class="comment">//触发测量</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//dht20_RegInit();//初始化1B\1C\1E寄存器</span></span><br><span class="line">            <span class="comment">//return Reg_status;</span></span><br><span class="line">        &#125;</span><br><span class="line">        HAL_Delay(<span class="number">80</span>);<span class="comment">//等待转换</span></span><br><span class="line"></span><br><span class="line">        HAL_I2C_Master_Receive(&amp;hi2c1,<span class="number">0x71</span>,pr_DAT,<span class="number">7</span>,<span class="number">100</span>);<span class="comment">//接受数据</span></span><br><span class="line">        <span class="keyword">while</span>( pr_DAT[<span class="number">0</span>]&amp;<span class="number">0x80</span> )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//Busy_handler();//正忙</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        pdht20[<span class="number">0</span>] = (((pr_DAT[<span class="number">1</span>]&lt;&lt;<span class="number">12</span>) + (pr_DAT[<span class="number">2</span>]&lt;&lt;<span class="number">4</span>) + (pr_DAT[<span class="number">3</span>]&gt;&gt;<span class="number">4</span>))*<span class="number">100.0</span>) / <span class="number">0xfffff</span>;</span><br><span class="line">        pdht20[<span class="number">1</span>] = ((((pr_DAT[<span class="number">3</span>]&lt;&lt;<span class="number">28</span>)&gt;&gt;<span class="number">12</span>) + (pr_DAT[<span class="number">4</span>]&lt;&lt;<span class="number">8</span>) + (pr_DAT[<span class="number">5</span>]))*<span class="number">200.0</span>) / <span class="number">0xfffff</span> - <span class="number">50</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><pre><code class="language-c">int8_t dht20_run(float *pdht20)
+    &#123;
+        uint8_t pt_DAT[] = &#123;0xAC,0x33,0x00&#125;;
+        uint8_t pr_DAT[7] = &#123;0x00&#125;;
+        static char init = 1;
+
+        if(init)
+        &#123;
+            HAL_Delay(100);//上电100ms等待
+            init -= 1;
+        &#125;
+        HAL_I2C_Master_Receive(&amp;hi2c1,0x71,pr_DAT,1,100);//读状态字
+
+        if( (pr_DAT[0] &amp; 0x10) &amp;&amp; (pr_DAT[0] &amp;0x08) )
+        &#123;
+            HAL_Delay(10);
+            HAL_I2C_Master_Transmit(&amp;hi2c1,0x71,pt_DAT,3,100);//触发测量
+        &#125;
+        else
+        &#123;
+            //dht20_RegInit();//初始化1B\1C\1E寄存器
+            //return Reg_status;
+        &#125;
+        HAL_Delay(80);//等待转换
+
+        HAL_I2C_Master_Receive(&amp;hi2c1,0x71,pr_DAT,7,100);//接受数据
+        while( pr_DAT[0]&amp;0x80 )
+        &#123;
+            //Busy_handler();//正忙
+        &#125;
+
+        pdht20[0] = (((pr_DAT[1]&lt;&lt;12) + (pr_DAT[2]&lt;&lt;4) + (pr_DAT[3]&gt;&gt;4))*100.0) / 0xfffff;
+        pdht20[1] = ((((pr_DAT[3]&lt;&lt;28)&gt;&gt;12) + (pr_DAT[4]&lt;&lt;8) + (pr_DAT[5]))*200.0) / 0xfffff - 50;
+    &#125;
+</code></pre>
 
     </div>
-
     
     
     
+    
+    
+    
+    
+</div>
 
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/DHT20/" rel="tag"># DHT20</a>
-              <a href="/tags/I2C/" rel="tag"># I2C</a>
-          </div>
-
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2025 lovely-lily&#39;s blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;lovely-lily
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
         
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item"></div>
-      <div class="post-nav-item">
-    <a href="/2024/04/17/eide/" rel="next" title="EIDE">
-      EIDE <i class="fa fa-chevron-right"></i>
-    </a></div>
     </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
+</footer>
 
         </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95"><span class="nav-number">1.</span> <span class="nav-text">引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%84%9A%E5%AE%9A%E4%B9%89-%E4%BB%8E%E6%9C%BA%E5%9C%B0%E5%9D%80"><span class="nav-number">1.1.</span> <span class="nav-text">引脚定义 &amp; 从机地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F-%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.2.</span> <span class="nav-text">数据格式 &amp; 转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">示例代码</span></a></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">lovely-lily</p>
-  <div class="site-description" itemprop="description">于道各努力 千里自同风</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">分类</span>
-      </div>
-      <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">标签</span>
-      </div>
-  </nav>
-</div>
-
-
-
-      </div>
-
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">lovely-lily</span>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
-  </div>
-
-        
+    <script src="/js/main.js"></script>
+    
+    
 
 
 
 
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
+    
 </body>
 </html>
