@@ -20,7 +20,7 @@ mixins.highlight = {
                 if (!codeEl) continue;
 
                 const rawCode = codeEl.textContent;
-                const langMatch = codeEl.className.match(/language-(\w+)/);
+	const langMatch = codeEl.className.match(/(?:language-)?(\w+)/);
                 const language = langMatch ? langMatch[1] : "plaintext";
 
                 let highlighted;

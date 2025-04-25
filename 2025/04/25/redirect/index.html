@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title> | lovely-lily&#39;s blog</title>
+    <title>串口重定向 | lovely-lily&#39;s blog</title>
     <meta name="author" content="lovely-lily" />
     <meta name="description" content="于道各努力 千里自同风" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -150,78 +154,128 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
+            <div class="article">
+    <div>
+        <h1>串口重定向</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/4/25
+        </span>
         
-        
-        
-        <span>
-            <a href="/tags/DHT20/" style="background: #ff7d73">
+        <span class="category">
+            <a href="/categories/%E7%AC%94%E8%AE%B0/">
                 <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                DHT20
+                笔记
             </a>
         </span>
         
         
-        
-        <span>
-            <a href="/tags/I2C/" style="background: #00bcd4">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                I2C
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/MCU/" style="color: #00a596">
+                    MCU
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/UART/" style="color: #ffa2c4">
+                    UART
+                </a>
+            </span>
+            
         </span>
-        
-        
-        
-        <span>
-            <a href="/tags/VSCODE/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                VSCODE
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/tags/EIDE/" style="background: #00a596">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                EIDE
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/tags/MCU/" style="background: #00bcd4">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                MCU
-            </a>
-        </span>
-        
-        
-        
-        <span>
-            <a href="/tags/UART/" style="background: #ffa2c4">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                UART
-            </a>
-        </span>
-        
         
     </div>
+    
+    <div class="content" v-pre>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>在调试那台陈旧的开发板时，我又一次陷入了沉默。板子没有屏幕，没有操作系统，甚至连个像样的日志系统都没有。每次出问题，就像在黑暗中摸索，无声无感。</p>
+<p>直到我第一次把 <code>printf</code> 重定向到了串口。那一刻，像是开发板终于开了口，说：“我在跑主循环了！”、“我卡在初始化了！”、“你给的地址不对！”</p>
+<p>那种感觉，就像是教会了婴儿说话，或者黑夜里点亮了一盏灯。从此之后，每一个字节的输出，都是我和它之间最真实的对话。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><ul>
+<li><p><code>GCC</code> 需添加编译指令 <code>-Wl,-u_printf_float</code> ，输出浮点数</p>
+</li>
+<li><p><code>Keil</code> 需启用 <code>micro lib</code></p>
+</li>
+</ul>
+<h3 id="HAL库"><a href="#HAL库" class="headerlink" title="HAL库"></a>HAL库</h3><ul>
+<li>h文件</li>
+</ul>
+<pre><code class="language-c">#define __GCC__
+#define USARTx_HANDLE huart1
+
+#ifdef __GCC__
+int __io_putchar(int ch);
+int _write(int file, char *ptr, int len);
+#else
+int fputc(int ch, FILE *f);
+#endif
+</code></pre>
+<ul>
+<li>c文件</li>
+</ul>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#ifdef __GCC__
+int __io_putchar(int ch)
+&#123;
+    HAL_UART_Transmit(&amp;USARTx_HANDLE, (uint8_t *)&amp;ch, 1, HAL_MAX_DELAY);
+    return ch;
+&#125;
+int _write(int file, char *ptr, int len)
+&#123;
+    int DataIdx;
+    for (DataIdx = 0; DataIdx &lt; len; DataIdx++) &#123;
+        __io_putchar(*ptr++);
+    &#125;
+    return len;
+&#125;
+#else
+int fputc(int ch, FILE *f)
+&#123;
+    HAL_UART_Transmit(&amp;USARTx_HANDLE, (uint8_t *)&amp;ch, 1, HAL_MAX_DELAY);
+    return ch;
+&#125;
+</code></pre>
+<h3 id="LL库"><a href="#LL库" class="headerlink" title="LL库"></a>LL库</h3><p>与 <code>HAL库</code> 类似，将 <code>huart1</code> 改为 <code>USART1</code>，<code>LL库</code> 不使用句柄。此外，更改串口发送函数。</p>
+<pre><code class="language-c">- h文件
+#define USARTx_HANDLE USART1
+- c文件
+    LL_USART_TransmitData8(USARTx, (uint8_t)ch);
+    while (!LL_USART_IsActiveFlag_TXE(USARTx))
+        ;
+</code></pre>
+<h3 id="STD库"><a href="#STD库" class="headerlink" title="STD库"></a>STD库</h3><p>与 <code>LL库</code> 类似，不使用句柄，仅更改串口发送函数。</p>
+<pre><code class="language-c">- c文件
+    USART_SendData(USARTx, (u8)ch);
+    while (USART_GetFlagStatus(USARTx, USART_FLAG_TXE) == RESET)
+        ;
+</code></pre>
+<h3 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h3><p>同上。</p>
+<pre><code class="language-c">- c文件
+    while ((USARTx-&gt;SR &amp; 0X40) == 0)
+        ;
+    USARTx-&gt;DR = (uint8_t)ch;
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
     
 </div>
 
@@ -261,6 +315,12 @@
 	<script src="https://static-argvchs.netlify.app/js/fireworks.min.js"></script>
 
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>

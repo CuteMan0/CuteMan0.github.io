@@ -202,13 +202,13 @@
     
     <div class="content" v-pre>
         <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p><code>ASAIR</code> 继 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-21.html">DHT11</a> 推出了 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-67.html">DHT20</a> ，采用 <code>I2C</code> 协议通信 ，本文提供简单驱动。</p>
-<h3 id="引脚定义-从机地址"><a href="#引脚定义-从机地址" class="headerlink" title="引脚定义 &amp; 从机地址"></a>引脚定义 &amp; 从机地址</h3><p><img src="/../images/dht20/PinSet.png" alt="引脚定义"><br><img src="/../images/dht20/DevAddress.png" alt="从机地址"></p>
-<h3 id="数据格式-转换"><a href="#数据格式-转换" class="headerlink" title="数据格式 &amp; 转换"></a>数据格式 &amp; 转换</h3><p><code>DHT20</code> 上电之后需等待 <code>100ms</code> 并初始化，测量时的数据格式如图示：</p>
+<h2 id="引脚定义-从机地址"><a href="#引脚定义-从机地址" class="headerlink" title="引脚定义 &amp; 从机地址"></a>引脚定义 &amp; 从机地址</h2><p><img src="/../images/dht20/PinSet.png" alt="引脚定义"><br><img src="/../images/dht20/DevAddress.png" alt="从机地址"></p>
+<h2 id="数据格式-转换"><a href="#数据格式-转换" class="headerlink" title="数据格式 &amp; 转换"></a>数据格式 &amp; 转换</h2><p><code>DHT20</code> 上电之后需等待 <code>100ms</code> 并初始化，测量时的数据格式如图示：</p>
 <p><img src="/../images/dht20/DataFormat.png" alt="数据格式"></p>
 <p>测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。</p>
 <p><img src="/../images/dht20/RH.png" alt="湿度计算公式"><br><img src="/../images/dht20/T.png" alt="温度计算公式"></p>
 <p>如数据：<code>1c（状态字）8c 67 34 e5 2c</code>，计算得到湿度：54.844951%<code>RH</code>，温度：11.190032<code>℃</code>.</p>
-<h3 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h3><pre><code class="language-c">int8_t dht20_run(float *pdht20)
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><pre><code class="language-c">int8_t dht20_run(float *pdht20)
 &#123;
     uint8_t pt_DAT[] = &#123;0xAC,0x33,0x00&#125;;
     uint8_t pr_DAT[7] = &#123;0x00&#125;;
