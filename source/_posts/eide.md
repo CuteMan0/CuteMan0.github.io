@@ -10,19 +10,19 @@ categories: [Software]
 
 相较于 `Keil` 等开发环境，`EIDE` 的优点在于`VSCode`平台上拼接各种插件满足开发需求。本文讲解基本的 `EIDE` 配置，并协作 `STM32CubeMX` 实现 `STM32` 的开发。
 
-### STM32CubeMX
+## STM32CubeMX
 
 [STM32CubeMX](https://www.st.com/zh/development-tools/stm32cubemx.html) 是 `ST` 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，支持 `EWARM` 、`MDK-ARM` 、`STM32CubeIDE` 、`Makefile` 等样式的工程输出。
 
-### Visual Studio Code
+## Visual Studio Code
 
 [Visual Studio Code](https://code.visualstudio.com/download)是微软开发的一款轻量级代码编辑器，支持多种编程语言，具有丰富的插件库。
 
 如果下载安装较慢可以参考[超详细的 VSCode 下载和安装教程](https://blog.csdn.net/leah126/article/details/131661331)中的替换镜像方法。
 
-#### 一些基本的插件
+### 一些基本的插件
 
-##### C/C++
+#### C/C++
 
 选中左侧导航栏的 `EXTENSIONS` ，搜索 `C/C++` 点击安装。
 
@@ -32,19 +32,19 @@ categories: [Software]
 
 ![IntelliSense](../images/eide/IntelliSense.png)
 
-##### Cortex-Debug
+#### Cortex-Debug
 
 在 `EXTENSIONS` 中，搜索 `Cortex-Debug` 点击安装，用来调试` Cortex-M` 内核的 `GDB` 插件。
 
 ![Cortex-Debug](../images/eide/Cortex-Debug.png)
 
-##### Embedded IDE
+#### Embedded IDE
 
 同样在 `EXTENSIONS` 中安装使用，附：[EIDE 教程](https://em-ide.com/docs/intro) 、[EIDE 论坛](https://discuss.em-ide.com/)。
 
 ![Embedded IDE](../images/eide/eide.png)
 
-###### 插件与配置
+##### 插件与配置
 
 - Setup Utility Tools
 
@@ -62,15 +62,15 @@ categories: [Software]
 
 ![ccPath](../images/eide/ccPath.png)
 
-### CubeMX + VSC 开发流程
+## CubeMX + VSC 开发流程
 
-#### 创建 Makefile
+### 创建 Makefile
 
 `Makefile` 文件定义了一系列规则，指明了源文件的编译顺序、依赖关系等，用来自动化编译 `C/C++` 项目。上文述及， `STM32CubeMX` 可以生成 `Makefile` 文件，无需开发者编写。
 
 ![mxOutput](../images/eide/mxOutput.png)
 
-#### 新建 EIDE 工程
+### 新建 EIDE 工程
 
 选中左侧导航栏的 `EIDE` ，点击`创建新工程->空项目`。
 
@@ -96,13 +96,13 @@ categories: [Software]
 
 ![yes2](../images/eide/yes2.png)
 
-#### 添加 Core 与 Drivers
+### 添加 Core 与 Drivers
 
 在生成的 `EIDE` 工程界面中点击 `Project Resources` ，选择 `Normal Folder` ，导入 `Core` 与 `Drivers` 文件夹。~~只导入文件也是可以的，但是不建议~~
 
 ![addFolder](../images/eide/addFolder.png)
 
-#### 项目配置
+### 项目配置
 
 打开 `Makefile` 文件，并复制 `.Id` 文件的文件名称。
 
@@ -111,7 +111,7 @@ categories: [Software]
 按照 `Makefile` 中的信息配置编译器和烧录器选项，并添加 `C` 的宏定义。
 ![config1](../images/eide/config2.png)
 
-#### 编译
+### 编译
 
 - 中文路径会导致编译失败。
 
@@ -119,7 +119,7 @@ categories: [Software]
 
 ![buildOutput](../images/eide/buildOutput.png)
 
-#### 调试
+### 调试
 
 经过[版本更迭](https://marketplace.visualstudio.com/items/CL.eide/changelog)，`3.16.0` 删除了自动生成 `launch.json` 调试配置的功能，取而代之的是菜单栏中的 `Generate Cortex-Debug Configuration`。
 
