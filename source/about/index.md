@@ -2,8 +2,6 @@
 title: About
 ---
 
-## About
-
 ### About blog
 
 记录笔记和碎碎念，原博客因重装丢失了，文档迁移中...

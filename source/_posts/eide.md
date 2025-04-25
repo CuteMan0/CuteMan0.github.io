@@ -1,5 +1,6 @@
 ---
 title: EIDE
+description: EIDE与STM32CubeMX协作
 date: 2024-04-17
 tags: [VSCODE, EIDE]
 categories: [Software]

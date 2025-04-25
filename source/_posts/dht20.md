@@ -1,5 +1,6 @@
 ---
 title: DHT20(I2C)
+description: 关于dht20的简单驱动
 date: 2024-01-29
 tags: [DHT20, I2C]
 categories: [Hardware]
