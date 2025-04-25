@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="引ASAIR 继 DHT11 推出了 DHT20 ，采用 I2C 协议通信。 引脚定义 &amp; 从机地址 数据格式 &amp; 转换DHT20 上电之后需等待 100ms 并初始化，测量时的数据格式如图示：  测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。  如数据：1c（状态字）8c 67 34 e5 2c，计算得到湿度：54.844951%RH，温度：11.190032">
+  <meta name="description" content="引ASAIR 继 DHT11 推出了 DHT20 ，采用 I2C 协议通信 ，本文提供简单驱动。 引脚定义 &amp; 从机地址 数据格式 &amp; 转换DHT20 上电之后需等待 100ms 并初始化，测量时的数据格式如图示：  测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。  如数据：1c（状态字）8c 67 34 e5 2c，计算得到湿度：54.844951%RH，温度">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DHT20(I2C)">
 <meta property="og:url" content="http://example.com/2024/01/29/dht20/index.html">
 <meta property="og:site_name" content="lovely-lily&#39;s blog">
-<meta property="og:description" content="引ASAIR 继 DHT11 推出了 DHT20 ，采用 I2C 协议通信。 引脚定义 &amp; 从机地址 数据格式 &amp; 转换DHT20 上电之后需等待 100ms 并初始化，测量时的数据格式如图示：  测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。  如数据：1c（状态字）8c 67 34 e5 2c，计算得到湿度：54.844951%RH，温度：11.190032">
+<meta property="og:description" content="引ASAIR 继 DHT11 推出了 DHT20 ，采用 I2C 协议通信 ，本文提供简单驱动。 引脚定义 &amp; 从机地址 数据格式 &amp; 转换DHT20 上电之后需等待 100ms 并初始化，测量时的数据格式如图示：  测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。  如数据：1c（状态字）8c 67 34 e5 2c，计算得到湿度：54.844951%RH，温度">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/dht20/PinSet.png">
 <meta property="og:image" content="http://example.com/images/dht20/DevAddress.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://example.com/images/dht20/RH.png">
 <meta property="og:image" content="http://example.com/images/dht20/T.png">
 <meta property="article:published_time" content="2024-01-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-04-25T04:18:09.587Z">
+<meta property="article:modified_time" content="2025-04-25T04:22:14.332Z">
 <meta property="article:author" content="lovely-lily">
 <meta property="article:tag" content="DHT20">
 <meta property="article:tag" content="I2C">
@@ -188,7 +188,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-25 12:18:09" itemprop="dateModified" datetime="2025-04-25T12:18:09+08:00">2025-04-25</time>
+                <time title="修改时间：2025-04-25 12:22:14" itemprop="dateModified" datetime="2025-04-25T12:22:14+08:00">2025-04-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,7 +211,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p><code>ASAIR</code> 继 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-21.html">DHT11</a> 推出了 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-67.html">DHT20</a> ，采用 <code>I2C</code> 协议通信。</p>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p><code>ASAIR</code> 继 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-21.html">DHT11</a> 推出了 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-67.html">DHT20</a> ，采用 <code>I2C</code> 协议通信 ，本文提供简单驱动。</p>
 <h3 id="引脚定义-从机地址"><a href="#引脚定义-从机地址" class="headerlink" title="引脚定义 &amp; 从机地址"></a>引脚定义 &amp; 从机地址</h3><p><img src="/../images/dht20/PinSet.png" alt="引脚定义"><br><img src="/../images/dht20/DevAddress.png" alt="从机地址"></p>
 <h3 id="数据格式-转换"><a href="#数据格式-转换" class="headerlink" title="数据格式 &amp; 转换"></a>数据格式 &amp; 转换</h3><p><code>DHT20</code> 上电之后需等待 <code>100ms</code> 并初始化，测量时的数据格式如图示：</p>
 <p><img src="/../images/dht20/DataFormat.png" alt="数据格式"></p>
@@ -239,8 +239,8 @@
     <div class="post-nav">
       <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2025/04/24/About/" rel="next" title="About">
-      About <i class="fa fa-chevron-right"></i>
+    <a href="/2024/04/17/eide/" rel="next" title="EIDE">
+      EIDE <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -314,16 +314,16 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
