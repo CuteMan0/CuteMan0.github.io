@@ -184,14 +184,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/MCU/" style="color: #00a596">
+                <a href="/tags/MCU/" style="color: #00bcd4">
                     MCU
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/UART/" style="color: #ffa2c4">
+                <a href="/tags/UART/" style="color: #03a9f4">
                     UART
                 </a>
             </span>
@@ -252,21 +252,21 @@ int fputc(int ch, FILE *f)
 <pre><code class="language-c">- h文件
 #define USARTx_HANDLE USART1
 - c文件
-    LL_USART_TransmitData8(USARTx, (uint8_t)ch);
-    while (!LL_USART_IsActiveFlag_TXE(USARTx))
+    LL_USART_TransmitData8(USARTx_HANDLE, (uint8_t)ch);
+    while (!LL_USART_IsActiveFlag_TXE(USARTx_HANDLE))
         ;
 </code></pre>
 <h3 id="STD库"><a href="#STD库" class="headerlink" title="STD库"></a>STD库</h3><p>与 <code>LL库</code> 类似，不使用句柄，仅更改串口发送函数。</p>
 <pre><code class="language-c">- c文件
-    USART_SendData(USARTx, (u8)ch);
-    while (USART_GetFlagStatus(USARTx, USART_FLAG_TXE) == RESET)
+    USART_SendData(USARTx_HANDLE, (u8)ch);
+    while (USART_GetFlagStatus(USARTx_HANDLE, USART_FLAG_TXE) == RESET)
         ;
 </code></pre>
 <h3 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h3><p>同上。</p>
 <pre><code class="language-c">- c文件
-    while ((USARTx-&gt;SR &amp; 0X40) == 0)
+    while ((USARTx_HANDLE-&gt;SR &amp; 0X40) == 0)
         ;
-    USARTx-&gt;DR = (uint8_t)ch;
+    USARTx_HANDLE-&gt;DR = (uint8_t)ch;
 </code></pre>
 
     </div>
