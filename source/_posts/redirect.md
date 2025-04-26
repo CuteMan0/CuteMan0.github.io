@@ -69,8 +69,8 @@ int fputc(int ch, FILE *f)
 - h文件
 #define USARTx_HANDLE USART1
 - c文件
-    LL_USART_TransmitData8(USARTx, (uint8_t)ch);
-    while (!LL_USART_IsActiveFlag_TXE(USARTx))
+    LL_USART_TransmitData8(USARTx_HANDLE, (uint8_t)ch);
+    while (!LL_USART_IsActiveFlag_TXE(USARTx_HANDLE))
         ;
 ```
 
@@ -80,8 +80,8 @@ int fputc(int ch, FILE *f)
 
 ```c
 - c文件
-    USART_SendData(USARTx, (u8)ch);
-    while (USART_GetFlagStatus(USARTx, USART_FLAG_TXE) == RESET)
+    USART_SendData(USARTx_HANDLE, (u8)ch);
+    while (USART_GetFlagStatus(USARTx_HANDLE, USART_FLAG_TXE) == RESET)
         ;
 ```
 
@@ -91,7 +91,7 @@ int fputc(int ch, FILE *f)
 
 ```c
 - c文件
-    while ((USARTx->SR & 0X40) == 0)
+    while ((USARTx_HANDLE->SR & 0X40) == 0)
         ;
-    USARTx->DR = (uint8_t)ch;
+    USARTx_HANDLE->DR = (uint8_t)ch;
 ```
