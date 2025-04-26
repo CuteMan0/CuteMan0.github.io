@@ -184,14 +184,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/MCU/" style="color: #03a9f4">
+                <a href="/tags/MCU/" style="color: #00bcd4">
                     MCU
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/UART/" style="color: #ffa2c4">
+                <a href="/tags/UART/" style="color: #00a596">
                     UART
                 </a>
             </span>
@@ -202,12 +202,12 @@
     
     <div class="content" v-pre>
         <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>在调试那台陈旧的开发板时，我又一次陷入了沉默。板子没有屏幕，没有操作系统，甚至连个像样的日志系统都没有。每次出问题，就像在黑暗中摸索，无声无感。</p>
-<p>直到我第一次把 <code>printf</code> 重定向到了串口。那一刻，像是开发板终于开了口，说：“我在跑主循环了！”、“我卡在初始化了！”、“你给的地址不对！”</p>
+<p>直到我第一次把 <strong>printf</strong> 重定向到了串口。那一刻，像是开发板终于开了口，说：“我在跑主循环了！”、“我卡在初始化了！”、“你给的地址不对！”</p>
 <p>那种感觉，就像是教会了婴儿说话，或者黑夜里点亮了一盏灯。从此之后，每一个字节的输出，都是我和它之间最真实的对话。</p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><ul>
-<li><p><code>GCC</code> 需添加编译指令 <code>-Wl,-u_printf_float</code> ，输出浮点数</p>
+<li><p><strong>GCC</strong> 需添加编译指令 <code>-Wl,-u_printf_float</code> ，输出浮点数</p>
 </li>
-<li><p><code>Keil</code> 需启用 <code>micro lib</code></p>
+<li><p><strong>Keil</strong> 需启用 <strong>micro lib</strong></p>
 </li>
 </ul>
 <h3 id="HAL库"><a href="#HAL库" class="headerlink" title="HAL库"></a>HAL库</h3><pre><code class="language-c">/******************************** .h ********************************/
@@ -244,7 +244,7 @@ int fputc(int ch, FILE *f)
     return ch;
 &#125;
 </code></pre>
-<h3 id="LL库"><a href="#LL库" class="headerlink" title="LL库"></a>LL库</h3><p>与 <code>HAL库</code> 类似，将 <code>huart1</code> 改为 <code>USART1</code>，<code>LL库</code> 不使用句柄。此外，更改串口发送函数。</p>
+<h3 id="LL库"><a href="#LL库" class="headerlink" title="LL库"></a>LL库</h3><p>与 <strong>HAL库</strong> 类似，将 <code>huart1</code> 改为 <code>USART1</code>，<strong>LL库</strong> 不使用句柄。此外，更改串口发送函数。</p>
 <pre><code class="language-c">/******************************** .h ********************************/
 #define USARTx_HANDLE USART1
 
@@ -255,7 +255,7 @@ int fputc(int ch, FILE *f)
         ;
     &#125;
 </code></pre>
-<h3 id="STD库"><a href="#STD库" class="headerlink" title="STD库"></a>STD库</h3><p>与 <code>LL库</code> 类似，不使用句柄，仅更改串口发送函数。</p>
+<h3 id="STD库"><a href="#STD库" class="headerlink" title="STD库"></a>STD库</h3><p>与 <strong>LL库</strong> 类似，不使用句柄，仅更改串口发送函数。</p>
 <pre><code class="language-c">/******************************** .c ********************************/
     USART_SendData(USARTx_HANDLE, (u8)ch);
     while (USART_GetFlagStatus(USARTx_HANDLE, USART_FLAG_TXE) == RESET)&#123;

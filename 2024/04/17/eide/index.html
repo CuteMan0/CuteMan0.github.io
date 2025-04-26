@@ -184,14 +184,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/VSCODE/" style="color: #ffa2c4">
+                <a href="/tags/VSCODE/" style="color: #ff7d73">
                     VSCODE
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/EIDE/" style="color: #ff7d73">
+                <a href="/tags/EIDE/" style="color: #00bcd4">
                     EIDE
                 </a>
             </span>
@@ -201,55 +201,55 @@
     </div>
     
     <div class="content" v-pre>
-        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>相较于 <code>Keil</code> 等开发环境，<code>EIDE</code> 的优点在于<code>VSCode</code>平台上拼接各种插件满足开发需求。本文讲解基本的 <code>EIDE</code> 配置，并协作 <code>STM32CubeMX</code> 实现 <code>STM32</code> 的开发。</p>
-<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><p><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stm32cubemx.html">STM32CubeMX</a> 是 <code>ST</code> 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，支持 <code>EWARM</code> 、<code>MDK-ARM</code> 、<code>STM32CubeIDE</code> 、<code>Makefile</code> 等样式的工程输出。</p>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>相较于 <strong>Keil</strong> 等开发环境，<strong>EIDE</strong> 的优点在于<strong>VSCode</strong>平台上拼接各种插件满足开发需求。本文讲解基本的 <strong>EIDE</strong> 配置，并协作 <strong>STM32CubeMX</strong> 实现 <strong>STM32</strong> 的开发。</p>
+<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><p><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stm32cubemx.html">STM32CubeMX</a> 是 <strong>ST</strong> 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，支持 <strong>EWARM</strong> 、<strong>MDK-ARM</strong> 、<strong>STM32CubeIDE</strong> 、<strong>Makefile</strong> 等样式的工程输出。</p>
 <h2 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h2><p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/download">Visual Studio Code</a>是微软开发的一款轻量级代码编辑器，支持多种编程语言，具有丰富的插件库。</p>
 <p>如果下载安装较慢可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/leah126/article/details/131661331">超详细的 VSCode 下载和安装教程</a>中的替换镜像方法。</p>
-<h3 id="一些基本的插件"><a href="#一些基本的插件" class="headerlink" title="一些基本的插件"></a>一些基本的插件</h3><h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的 <code>EXTENSIONS</code> ，搜索 <code>C/C++</code> 点击安装。</p>
+<h3 id="一些基本的插件"><a href="#一些基本的插件" class="headerlink" title="一些基本的插件"></a>一些基本的插件</h3><h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的 <strong>EXTENSIONS</strong> ，搜索 <strong>C&#x2F;C++</strong> 点击安装。</p>
 <p><img src="/../images/eide/c.png" alt="C&#x2F;C++"></p>
-<p>选中左侧导航栏底部的 <code>Manage</code> 点击 <code>Settings</code> 搜索 <code>IntelliSense</code> ，可使能代码补全与配置参数。</p>
+<p>选中左侧导航栏底部的 <strong>Manage</strong> 点击 <strong>Settings</strong> 搜索 <strong>IntelliSense</strong> ，可使能代码补全与配置参数。</p>
 <p><img src="/../images/eide/IntelliSense.png" alt="IntelliSense"></p>
-<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>在 <code>EXTENSIONS</code> 中，搜索 <code>Cortex-Debug</code> 点击安装，用来调试<code> Cortex-M</code> 内核的 <code>GDB</code> 插件。</p>
+<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>在 <strong>EXTENSIONS</strong> 中，搜索 <strong>Cortex-Debug</strong> 点击安装，用来调试 <strong>Cortex-M</strong> 内核的 <strong>GDB</strong> 插件。</p>
 <p><img src="/../images/eide/Cortex-Debug.png" alt="Cortex-Debug"></p>
-<h4 id="Embedded-IDE"><a href="#Embedded-IDE" class="headerlink" title="Embedded IDE"></a>Embedded IDE</h4><p>同样在 <code>EXTENSIONS</code> 中安装使用，附：<a target="_blank" rel="noopener" href="https://em-ide.com/docs/intro">EIDE 教程</a> 、<a target="_blank" rel="noopener" href="https://discuss.em-ide.com/">EIDE 论坛</a>。</p>
+<h4 id="Embedded-IDE"><a href="#Embedded-IDE" class="headerlink" title="Embedded IDE"></a>Embedded IDE</h4><p>同样在 <strong>EXTENSIONS</strong> 中安装使用，附：<a target="_blank" rel="noopener" href="https://em-ide.com/docs/intro">EIDE 教程</a> 、<a target="_blank" rel="noopener" href="https://discuss.em-ide.com/">EIDE 论坛</a>。</p>
 <p><img src="/../images/eide/eide.png" alt="Embedded IDE"></p>
 <h5 id="插件与配置"><a href="#插件与配置" class="headerlink" title="插件与配置"></a>插件与配置</h5><ul>
 <li>Setup Utility Tools</li>
 </ul>
-<p>在 <code>EIDE</code> 中选择左下区域的 <code>OPERATIONS</code> ，点击 <code>Setup Utility Tools</code>，安装相应的工具。</p>
+<p>在 <strong>EIDE</strong> 中选择左下区域的 <strong>OPERATIONS</strong> ，点击 <strong>Setup Utility Tools</strong>，安装相应的工具。</p>
 <p><img src="/../images/eide/eideTools1.png" alt="eideTools"></p>
 <p>图示是我目前下载的工具，以供参考。</p>
 <p><img src="/../images/eide/eideTools2.png" alt="eideTools"></p>
 <ul>
 <li>绑定编译器</li>
 </ul>
-<p>如果想要和 <code>keil</code> 项目共生，回到 <code>Setting</code> 中，搜索 <code>ARM</code> 并在 <code>ARMCC5</code> <code>、ARMCC6</code> 和 <code>ARM.INI</code> 下方地址栏中分别填入编译器及 <code>MDK-ARM</code> 的本地路径，使能 <code>ARMCC</code> 生成的 <code>.axf</code> 文件转成 <code>.elf</code> 文件。</p>
+<p>如果想要和 <strong>keil</strong> 项目共生，回到 <strong>Setting</strong> 中，搜索 <strong>ARM</strong> 并在 <strong>ARMCC5</strong> <strong>、ARMCC6</strong> 和 <strong>ARM.INI</strong> 下方地址栏中分别填入编译器及 <strong>MDK-ARM</strong> 的本地路径，使能 <strong>ARMCC</strong> 生成的 <strong>.axf</strong> 文件转成 <strong>.elf</strong> 文件。</p>
 <p><img src="/../images/eide/ccPath.png" alt="ccPath"></p>
-<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><h3 id="创建-Makefile"><a href="#创建-Makefile" class="headerlink" title="创建 Makefile"></a>创建 Makefile</h3><p><code>Makefile</code> 文件定义了一系列规则，指明了源文件的编译顺序、依赖关系等，用来自动化编译 <code>C/C++</code> 项目。上文述及， <code>STM32CubeMX</code> 可以生成 <code>Makefile</code> 文件，无需开发者编写。</p>
+<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><h3 id="创建-Makefile"><a href="#创建-Makefile" class="headerlink" title="创建 Makefile"></a>创建 Makefile</h3><p><strong>Makefile</strong> 文件定义了一系列规则，指明了源文件的编译顺序、依赖关系等，用来自动化编译 <strong>C&#x2F;C++</strong> 项目。上文述及， <strong>STM32CubeMX</strong> 可以生成 <strong>Makefile</strong> 文件，无需开发者编写。</p>
 <p><img src="/../images/eide/mxOutput.png" alt="mxOutput"></p>
-<h3 id="新建-EIDE-工程"><a href="#新建-EIDE-工程" class="headerlink" title="新建 EIDE 工程"></a>新建 EIDE 工程</h3><p>选中左侧导航栏的 <code>EIDE</code> ，点击<code>创建新工程-&gt;空项目</code>。</p>
+<h3 id="新建-EIDE-工程"><a href="#新建-EIDE-工程" class="headerlink" title="新建 EIDE 工程"></a>新建 EIDE 工程</h3><p>选中左侧导航栏的 <strong>EIDE</strong> ，点击<strong>创建新工程-&gt;空项目</strong>。</p>
 <p><img src="/../images/eide/eideNew.png" alt="eideNew"></p>
-<p>笔者选用的芯片是 <em>STM32F407</em> 系列的，故选择 <code>Cortex-M Project</code>。</p>
+<p>笔者选用的芯片是 <em>STM32F407</em> 系列的，故选择 <strong>Cortex-M Project</strong>。</p>
 <p><img src="/../images/eide/core.png" alt="core"></p>
-<p>需要仔细的是，此时的 <code>EIDE</code> 的新建工程名称应与前在 <code>STM32CubeMX</code> 设置的工程名称一致。</p>
+<p>需要仔细的是，此时的 <strong>EIDE</strong> 的新建工程名称应与前在 <strong>STM32CubeMX</strong> 设置的工程名称一致。</p>
 <p><img src="/../images/eide/prjName.png" alt="prjName"></p>
 <p>项目路径同样需要保持一致。</p>
 <p><img src="/../images/eide/prjPath.png" alt="prjPath"></p>
-<p>因为之前通过 <code>STM32CubeMX</code> 创建了项目文件，这里 <code>EIDE</code> 会提示是否基于已有的路径创建工程文件。</p>
+<p>因为之前通过 <strong>STM32CubeMX</strong> 创建了项目文件，这里 <strong>EIDE</strong> 会提示是否基于已有的路径创建工程文件。</p>
 <p><img src="/../images/eide/yes1.png" alt="yes1"></p>
 <p>切换工作区。</p>
 <p><img src="/../images/eide/yes2.png" alt="yes2"></p>
-<h3 id="添加-Core-与-Drivers"><a href="#添加-Core-与-Drivers" class="headerlink" title="添加 Core 与 Drivers"></a>添加 Core 与 Drivers</h3><p>在生成的 <code>EIDE</code> 工程界面中点击 <code>Project Resources</code> ，选择 <code>Normal Folder</code> ，导入 <code>Core</code> 与 <code>Drivers</code> 文件夹。<del>只导入文件也是可以的，但是不建议</del></p>
+<h3 id="添加-Core-与-Drivers"><a href="#添加-Core-与-Drivers" class="headerlink" title="添加 Core 与 Drivers"></a>添加 Core 与 Drivers</h3><p>在生成的 <strong>EIDE</strong> 工程界面中点击 <strong>Project Resources</strong> ，选择 <strong>Normal Folder</strong> ，导入 <strong>Core</strong> 与 <strong>Drivers</strong> 文件夹。<del>只导入文件也是可以的，但是不建议</del></p>
 <p><img src="/../images/eide/addFolder.png" alt="addFolder"></p>
-<h3 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h3><p>打开 <code>Makefile</code> 文件，并复制 <code>.Id</code> 文件的文件名称。</p>
+<h3 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h3><p>打开 <strong>Makefile</strong> 文件，并复制 <strong>.Id</strong> 文件的文件名称。</p>
 <p><img src="/../images/eide/config1.png" alt="config1"></p>
-<p>按照 <code>Makefile</code> 中的信息配置编译器和烧录器选项，并添加 <code>C</code> 的宏定义。<br><img src="/../images/eide/config2.png" alt="config1"></p>
+<p>按照 <strong>Makefile</strong> 中的信息配置编译器和烧录器选项，并添加 <strong>C</strong> 的宏定义。<br><img src="/../images/eide/config2.png" alt="config1"></p>
 <h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><ul>
 <li>中文路径会导致编译失败。</li>
 </ul>
 <p>编译成功后会显示内存资源占用、hex 和 bin 文件输出路径。</p>
 <p><img src="/../images/eide/buildOutput.png" alt="buildOutput"></p>
-<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>经过<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items/CL.eide/changelog">版本更迭</a>，<code>3.16.0</code> 删除了自动生成 <code>launch.json</code> 调试配置的功能，取而代之的是菜单栏中的 <code>Generate Cortex-Debug Configuration</code>。</p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>经过<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items/CL.eide/changelog">版本更迭</a>，<strong>3.16.0</strong> 删除了自动生成 <strong>launch.json</strong> 调试配置的功能，取而代之的是菜单栏中的 <strong>Generate Cortex-Debug Configuration</strong>。</p>
 <p><img src="/../images/eide/debugConfig.png" alt="debugConfig"></p>
 
     </div>
