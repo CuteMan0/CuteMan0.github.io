@@ -184,14 +184,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/MCU/" style="color: #00bcd4">
+                <a href="/tags/MCU/" style="color: #03a9f4">
                     MCU
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/UART/" style="color: #03a9f4">
+                <a href="/tags/UART/" style="color: #00bcd4">
                     UART
                 </a>
             </span>
@@ -210,10 +210,8 @@
 <li><p><code>Keil</code> 需启用 <code>micro lib</code></p>
 </li>
 </ul>
-<h3 id="HAL库"><a href="#HAL库" class="headerlink" title="HAL库"></a>HAL库</h3><ul>
-<li>h文件</li>
-</ul>
-<pre><code class="language-c">#define __GCC__
+<h3 id="HAL库"><a href="#HAL库" class="headerlink" title="HAL库"></a>HAL库</h3><pre><code class="language-c">/******************************** .h ********************************/
+#define __GCC__
 #define USARTx_HANDLE huart1
 
 #ifdef __GCC__
@@ -222,11 +220,9 @@ int _write(int file, char *ptr, int len);
 #else
 int fputc(int ch, FILE *f);
 #endif
-</code></pre>
-<ul>
-<li>c文件</li>
-</ul>
-<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+/******************************** .c ********************************/
+#include &lt;stdio.h&gt;
 #ifdef __GCC__
 int __io_putchar(int ch)
 &#123;
@@ -249,23 +245,28 @@ int fputc(int ch, FILE *f)
 &#125;
 </code></pre>
 <h3 id="LL库"><a href="#LL库" class="headerlink" title="LL库"></a>LL库</h3><p>与 <code>HAL库</code> 类似，将 <code>huart1</code> 改为 <code>USART1</code>，<code>LL库</code> 不使用句柄。此外，更改串口发送函数。</p>
-<pre><code class="language-c">- h文件
+<pre><code class="language-c">/******************************** .h ********************************/
 #define USARTx_HANDLE USART1
-- c文件
+
+/******************************** .c ********************************/
+//将 HAL_UART_Transmit 替换成以下
     LL_USART_TransmitData8(USARTx_HANDLE, (uint8_t)ch);
-    while (!LL_USART_IsActiveFlag_TXE(USARTx_HANDLE))
+    while (!LL_USART_IsActiveFlag_TXE(USARTx_HANDLE))&#123;
         ;
+    &#125;
 </code></pre>
 <h3 id="STD库"><a href="#STD库" class="headerlink" title="STD库"></a>STD库</h3><p>与 <code>LL库</code> 类似，不使用句柄，仅更改串口发送函数。</p>
-<pre><code class="language-c">- c文件
+<pre><code class="language-c">/******************************** .c ********************************/
     USART_SendData(USARTx_HANDLE, (u8)ch);
-    while (USART_GetFlagStatus(USARTx_HANDLE, USART_FLAG_TXE) == RESET)
+    while (USART_GetFlagStatus(USARTx_HANDLE, USART_FLAG_TXE) == RESET)&#123;
         ;
+    &#125;
 </code></pre>
 <h3 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h3><p>同上。</p>
-<pre><code class="language-c">- c文件
-    while ((USARTx_HANDLE-&gt;SR &amp; 0X40) == 0)
+<pre><code class="language-c">/******************************** .c ********************************/
+    while ((USARTx_HANDLE-&gt;SR &amp; 0X40) == 0)&#123;
         ;
+    &#125;
     USARTx_HANDLE-&gt;DR = (uint8_t)ch;
 </code></pre>
 
