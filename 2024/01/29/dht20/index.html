@@ -184,14 +184,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/DHT20/" style="color: #ff7d73">
+                <a href="/tags/DHT20/" style="color: #ffa2c4">
                     DHT20
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/I2C/" style="color: #00a596">
+                <a href="/tags/I2C/" style="color: #00bcd4">
                     I2C
                 </a>
             </span>
@@ -207,7 +207,7 @@
 <p><img src="/../images/dht20/DataFormat.png" alt="数据格式"></p>
 <p>测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。</p>
 <p><img src="/../images/dht20/RH.png" alt="湿度计算公式"><br><img src="/../images/dht20/T.png" alt="温度计算公式"></p>
-<p>如数据：<code>1c（状态字）8c 67 34 e5 2c</code>，计算得到湿度：54.844951%<code>RH</code>，温度：11.190032<code>℃</code>.</p>
+<p>如数据：<code>1c（状态字）8c 67 34 e5 2c</code>，计算得到湿度：<code>54.844951%RH</code>，温度：<code>11.190032℃</code>.</p>
 <h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><pre><code class="language-c">int8_t dht20_run(float *pdht20)
 &#123;
     uint8_t pt_DAT[] = &#123;0xAC,0x33,0x00&#125;;
