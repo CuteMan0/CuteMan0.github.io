@@ -8,7 +8,7 @@ categories: [Hardware]
 
 ## 引
 
-`ASAIR` 继 [DHT11](http://www.aosong.com/en/products-21.html) 推出了 [DHT20](http://www.aosong.com/en/products-67.html) ，采用 `I2C` 协议通信 ，本文提供简单驱动。
+**ASAIR** 继 [DHT11](http://www.aosong.com/en/products-21.html) 推出了 [DHT20](http://www.aosong.com/en/products-67.html) ，采用 **I2C** 协议通信 ，本文提供简单驱动。
 
 ## 引脚定义 & 从机地址
 
@@ -17,7 +17,7 @@ categories: [Hardware]
 
 ## 数据格式 & 转换
 
-`DHT20` 上电之后需等待 `100ms` 并初始化，测量时的数据格式如图示：
+**DHT20** 上电之后需等待 **100ms** 并初始化，测量时的数据格式如图示：
 
 ![数据格式](../images/dht20/DataFormat.png)
 
@@ -26,7 +26,7 @@ categories: [Hardware]
 ![湿度计算公式](../images/dht20/RH.png)
 ![温度计算公式](../images/dht20/T.png)
 
-如数据：`1c（状态字）8c 67 34 e5 2c`，计算得到湿度：54.844951%`RH`，温度：11.190032`℃`.
+如数据：**1c（状态字）8c 67 34 e5 2c**，计算得到湿度：**54.844951%RH**，温度：**11.190032℃**.
 
 ## 示例代码
 
