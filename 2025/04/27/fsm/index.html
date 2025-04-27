@@ -184,14 +184,14 @@
             
             <span class="tag">
                 
-                <a href="/tags/FSM/" style="color: #ffa2c4">
+                <a href="/tags/FSM/" style="color: #00a596">
                     FSM
                 </a>
             </span>
             
             <span class="tag">
                 
-                <a href="/tags/C/" style="color: #00bcd4">
+                <a href="/tags/C/" style="color: #ffa2c4">
                     C
                 </a>
             </span>
@@ -242,7 +242,7 @@
 </tr>
 </tbody></table>
 <p>状态机的核心就是：“<strong>状态 + 输入 → 动作 &amp; 新状态</strong>”</p>
-<h3 id="表驱动状态机"><a href="#表驱动状态机" class="headerlink" title="表驱动状态机"></a>表驱动状态机</h3><p>显然，我们可以使用 <strong>C</strong> 中的 数组来实现如此一个状态机的<strong>转移表</strong>：</p>
+<h3 id="表驱动状态机"><a href="#表驱动状态机" class="headerlink" title="表驱动状态机"></a>表驱动状态机</h3><p>显然，我们可以使用 <strong>C</strong> 中的数组来实现如此一个状态机的<strong>转移表</strong>：</p>
 <pre><code class="language-c">typedef void (*pfState)(void);
 
 typedef enum eEvent &#123;
