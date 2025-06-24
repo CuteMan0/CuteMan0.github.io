@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Categories: 笔记 | lovely-lily&#39;s blog</title>
+    <title>如何备份博客 | lovely-lily&#39;s blog</title>
     <meta name="author" content="lovely-lily" />
     <meta name="description" content="于道各努力 千里自同风" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -150,14 +154,20 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
+            <div class="article">
+    <div>
+        <h1>如何备份博客</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/6/24
+        </span>
         
-        
-        
-        <span>
-            <a href="/categories/%E7%AC%94%E8%AE%B0/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
+        <span class="category">
+            <a href="/categories/%E7%AC%94%E8%AE%B0/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
@@ -166,121 +176,78 @@
         </span>
         
         
-        
-        
-        
-        <span>
-            <a href="/categories/Software/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                Software
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/GitHub/" style="color: #03a9f4">
+                    GitHub
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/Hexo/" style="color: #ff7d73">
+                    Hexo
+                </a>
+            </span>
+            
         </span>
-        
-        
-        
-        <span>
-            <a href="/categories/Hardware/" style="background: #ffa2c4">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                Hardware
-            </a>
-        </span>
-        
         
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/6/24</div>
-            <a href="/2025/06/24/blog_backup/">
-                <h3>如何备份博客</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E7%AC%94%E8%AE%B0/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        笔记
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/GitHub/" style="color: #03a9f4">
-                            GitHub
-                        </a>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/Hexo/" style="color: #ff7d73">
-                            Hexo
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    <div class="content" v-pre>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>考虑到因为系统重装，新机组装等原因，导致博客丢失 <del>我已经丢失过了</del>，因此记录一下如何备份博客。</p>
+<h2 id="在旧机需要做的工作"><a href="#在旧机需要做的工作" class="headerlink" title="在旧机需要做的工作"></a>在旧机需要做的工作</h2><p>在旧机器系统重装或者弃置前，我们还需要做一些保存备份工作。</p>
+<h3 id="创建-GitHub-备份分支"><a href="#创建-GitHub-备份分支" class="headerlink" title="创建 GitHub 备份分支"></a>创建 GitHub 备份分支</h3><p>在博客仓库中创建一个备份分支，用于保存博客的源文件。<br>以下是推送备份分支的shell，来自于<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV13g41147yV/?spm_id_from=333.337.search-card.all.click&vd_source=fa5c316d2c4d5db6b77e918d42ade3c4">Hexo博客备份和迁移</a>。</p>
+<pre><code class="language-shell">echo -e &quot;\033[32m正在为你备份博客中.........\033[0m&quot;
+git add .
+echo -e &quot;\033[32m正在为你备份博客中.........\033[0m&quot;
+git commit -m &quot;update&quot;
+echo -e &quot;\033[32m正在为你备份博客中.........\033[0m&quot;
+git push origin hexo --force
+if [ $? -ne 0 ]; then
+    echo -e &quot;\033[31m 备份失败！请检查网络情况！ \033[0m&quot;
+else
+    echo -e &quot;\033[32m恭喜你！已为你备份到你的GitHub仓库 backup \033[0m&quot;
+fi
+</code></pre>
+<h3 id="备份ssh密钥"><a href="#备份ssh密钥" class="headerlink" title="备份ssh密钥"></a>备份ssh密钥</h3><p>记得<code>保存</code>ssh密钥，以便与GitHub仓库建立连接。当然也可以重新在GitHub上<code>重新配置</code>ssh密钥。</p>
+<h2 id="在新机需要做的工作"><a href="#在新机需要做的工作" class="headerlink" title="在新机需要做的工作"></a>在新机需要做的工作</h2><h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装<a target="_blank" rel="noopener" href="https://git-scm.com/downloads">Git</a></h3><p>在<a target="_blank" rel="noopener" href="https://git-scm.com/downloads">Git</a>官网下载安装包，安装Git。安装完成后可以在cmd中输入<code>git --version</code>查看是否安装成功。</p>
+<p>具体操作和教程可以参考<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Hkr7YYEh8/?spm_id_from=333.337.search-card.all.click">给傻子的Git教程</a>。</p>
+<h3 id="安装nodejs"><a href="#安装nodejs" class="headerlink" title="安装nodejs"></a>安装<a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn">nodejs</a></h3><p>在<a target="_blank" rel="noopener" href="https://nodejs.org/zh-cn">nodejs</a>官网下载安装包，安装nodejs。下载完成后可以在cmd中输入<code>node -v</code>和<code>npm -v</code>查看是否安装成功。</p>
+<h4 id="设置环境变量和路径"><a href="#设置环境变量和路径" class="headerlink" title="设置环境变量和路径"></a>设置环境变量和路径</h4><p>在 nodejs 文件夹中新建两个空文件夹<code>node_global</code>和<code>node_cache</code>，分别用于存放全局模块和缓存模块。打开cmd，输入如下两个命令：</p>
+<pre><code class="language-shell">npm config set prefix &quot;nodejs文件夹路径\node_global&quot;
+npm config set cache &quot;nodejs文件夹路径\node_cache&quot;
+</code></pre>
+<p>打开<code>控制面板</code>-&gt;<code>系统和安全</code>-&gt;<code>系统</code>-&gt;<code>高级系统设置</code>-&gt;<code>环境变量</code>，在<code>系统变量</code>中找到<code>Path</code>，新建<code>nodejs文件夹路径\node_global\node_modules</code>，点击<code>确定</code>，保存设置。</p>
+<p>然后编辑用户变量中的<code>Path</code>，将原npm的路径改为<code>nodejs文件夹路径\node_global</code>，点击<code>确定</code>，保存设置。</p>
+<h4 id="安装webpack"><a href="#安装webpack" class="headerlink" title="安装webpack"></a>安装webpack</h4><p>在 cmd 命令下执行：</p>
+<pre><code class="language-shell">npm install webpack -g 
+</code></pre>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>安装完nodejs之后，可以使用npm安装hexo框架。在博客文件夹中右击选择 Git Bash Here，输入以下命令：</p>
+<pre><code class="language-shell">npm install -g hexo-cli
+</code></pre>
+<h3 id="git-clone-博客的备份分支"><a href="#git-clone-博客的备份分支" class="headerlink" title="git clone 博客的备份分支"></a>git clone 博客的备份分支</h3><p>把之前旧机的备份分支clone到本地，此时要注意要切换到<code>备份分支</code>，而不是hexo渲染推送的主分支。</p>
+<pre><code class="language-shell">git clone git@github.com:yourname/yourname.github.io.git
+</code></pre>
+<p>进入博客文件夹，执行以下命令：</p>
+<pre><code class="language-shell">npm install
+</code></pre>
+<p>OK，至此，新机上的博客已经迁移完成。</p>
+<h4 id="git-clone-主题"><a href="#git-clone-主题" class="headerlink" title="git clone 主题"></a><del>git clone 主题</del></h4><p>主题应该会自动被 npm install 一起生成的，如果主题没有安装成功，可以手动安装。</p>
+
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/4/25</div>
-            <a href="/2025/04/25/redirect/">
-                <h3>串口重定向</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E7%AC%94%E8%AE%B0/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        笔记
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/MCU/" style="color: #00a596">
-                            MCU
-                        </a>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/UART/" style="color: #00bcd4">
-                            UART
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
+    
+    
+    
+    
+    
     
 </div>
 
@@ -320,6 +287,12 @@
 	<script src="https://static-argvchs.netlify.app/js/fireworks.min.js"></script>
 
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>
