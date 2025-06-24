@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>DHT20(I2C) | lovely-lily&#39;s blog</title>
+    <meta name="author" content="lovely-lily" />
+    <meta name="description" content="于道各努力 千里自同风" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>LOVELY-LILY&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;LOVELY-LILY&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>DHT20(I2C)</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/1/29
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Hardware/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Hardware
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/DHT20/" style="color: #00bcd4">
+                    DHT20
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/I2C/" style="color: #ffa2c4">
+                    I2C
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p><strong>ASAIR</strong> 继 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-21.html">DHT11</a> 推出了 <a target="_blank" rel="noopener" href="http://www.aosong.com/en/products-67.html">DHT20</a> ，采用 <strong>I2C</strong> 协议通信 ，本文提供简单驱动。</p>
+<h2 id="引脚定义-从机地址"><a href="#引脚定义-从机地址" class="headerlink" title="引脚定义 &amp; 从机地址"></a>引脚定义 &amp; 从机地址</h2><p><img src="/../images/dht20/PinSet.png" alt="引脚定义"><br><img src="/../images/dht20/DevAddress.png" alt="从机地址"></p>
+<h2 id="数据格式-转换"><a href="#数据格式-转换" class="headerlink" title="数据格式 &amp; 转换"></a>数据格式 &amp; 转换</h2><p><strong>DHT20</strong> 上电之后需等待 <strong>100ms</strong> 并初始化，测量时的数据格式如图示：</p>
+<p><img src="/../images/dht20/DataFormat.png" alt="数据格式"></p>
+<p>测量后分别将获得温湿度的 20 位数据带入下图公式计算得出测量值。</p>
+<p><img src="/../images/dht20/RH.png" alt="湿度计算公式"><br><img src="/../images/dht20/T.png" alt="温度计算公式"></p>
+<p>如数据：<strong>1c（状态字）8c 67 34 e5 2c</strong>，计算得到湿度：<strong>54.844951%RH</strong>，温度：<strong>11.190032℃</strong>.</p>
+<h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><pre><code class="language-c">int8_t dht20_run(float *pdht20)
+&#123;
+    uint8_t pt_DAT[] = &#123;0xAC,0x33,0x00&#125;;
+    uint8_t pr_DAT[7] = &#123;0x00&#125;;
+    static char init = 1;
+
+    if(init)
+    &#123;
+        HAL_Delay(100);//上电100ms等待
+        init -= 1;
+    &#125;
+    HAL_I2C_Master_Receive(&amp;hi2c1,0x71,pr_DAT,1,100);//读状态字
+
+    if( (pr_DAT[0] &amp; 0x10) &amp;&amp; (pr_DAT[0] &amp;0x08) )
+    &#123;
+        HAL_Delay(10);
+        HAL_I2C_Master_Transmit(&amp;hi2c1,0x71,pt_DAT,3,100);//触发测量
+    &#125;
+    else
+    &#123;
+        //dht20_RegInit();//初始化1B\1C\1E寄存器
+        //return Reg_status;
+    &#125;
+    HAL_Delay(80);//等待转换
+
+    HAL_I2C_Master_Receive(&amp;hi2c1,0x71,pr_DAT,7,100);//接受数据
+    while( pr_DAT[0]&amp;0x80 )
+    &#123;
+        //Busy_handler();//正忙
+    &#125;
+
+    pdht20[0] = (((pr_DAT[1]&lt;&lt;12) + (pr_DAT[2]&lt;&lt;4) + (pr_DAT[3]&gt;&gt;4))*100.0) / 0xfffff;
+    pdht20[1] = ((((pr_DAT[3]&lt;&lt;28)&gt;&gt;12) + (pr_DAT[4]&lt;&lt;8) + (pr_DAT[5]))*200.0) / 0xfffff - 50;
+&#125;
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2025 lovely-lily&#39;s blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;lovely-lily
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+
+	<canvas
+	    id="fireworks"
+ 	   style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+	></canvas>
+	<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="https://static-argvchs.netlify.app/js/fireworks.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

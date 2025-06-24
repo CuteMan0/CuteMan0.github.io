@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>EIDE | lovely-lily&#39;s blog</title>
+    <meta name="author" content="lovely-lily" />
+    <meta name="description" content="于道各努力 千里自同风" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>LOVELY-LILY&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;LOVELY-LILY&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>EIDE</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/4/17
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Software/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Software
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/VSCODE/" style="color: #03a9f4">
+                    VSCODE
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/EIDE/" style="color: #00a596">
+                    EIDE
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>相较于 <strong>Keil</strong> 等开发环境，<strong>EIDE</strong> 的优点在于<strong>VSCode</strong>平台上拼接各种插件满足开发需求。本文讲解基本的 <strong>EIDE</strong> 配置，并协作 <strong>STM32CubeMX</strong> 实现 <strong>STM32</strong> 的开发。</p>
+<h2 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h2><p><a target="_blank" rel="noopener" href="https://www.st.com/zh/development-tools/stm32cubemx.html">STM32CubeMX</a> 是 <strong>ST</strong> 公司开发的一款图形配置工具，可通过配置自动生成初始化代码，在生成的沙箱段中支持用户编写应用程序，支持 <strong>EWARM</strong> 、<strong>MDK-ARM</strong> 、<strong>STM32CubeIDE</strong> 、<strong>Makefile</strong> 等样式的工程输出。</p>
+<h2 id="Visual-Studio-Code"><a href="#Visual-Studio-Code" class="headerlink" title="Visual Studio Code"></a>Visual Studio Code</h2><p><a target="_blank" rel="noopener" href="https://code.visualstudio.com/download">Visual Studio Code</a>是微软开发的一款轻量级代码编辑器，支持多种编程语言，具有丰富的插件库。</p>
+<p>如果下载安装较慢可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/leah126/article/details/131661331">超详细的 VSCode 下载和安装教程</a>中的替换镜像方法。</p>
+<h3 id="一些基本的插件"><a href="#一些基本的插件" class="headerlink" title="一些基本的插件"></a>一些基本的插件</h3><h4 id="C-C"><a href="#C-C" class="headerlink" title="C&#x2F;C++"></a>C&#x2F;C++</h4><p>选中左侧导航栏的 <strong>EXTENSIONS</strong> ，搜索 <strong>C&#x2F;C++</strong> 点击安装。</p>
+<p><img src="/../images/eide/c.png" alt="C&#x2F;C++"></p>
+<p>选中左侧导航栏底部的 <strong>Manage</strong> 点击 <strong>Settings</strong> 搜索 <strong>IntelliSense</strong> ，可使能代码补全与配置参数。</p>
+<p><img src="/../images/eide/IntelliSense.png" alt="IntelliSense"></p>
+<h4 id="Cortex-Debug"><a href="#Cortex-Debug" class="headerlink" title="Cortex-Debug"></a>Cortex-Debug</h4><p>在 <strong>EXTENSIONS</strong> 中，搜索 <strong>Cortex-Debug</strong> 点击安装，用来调试 <strong>Cortex-M</strong> 内核的 <strong>GDB</strong> 插件。</p>
+<p><img src="/../images/eide/Cortex-Debug.png" alt="Cortex-Debug"></p>
+<h4 id="Embedded-IDE"><a href="#Embedded-IDE" class="headerlink" title="Embedded IDE"></a>Embedded IDE</h4><p>同样在 <strong>EXTENSIONS</strong> 中安装使用，附：<a target="_blank" rel="noopener" href="https://em-ide.com/docs/intro">EIDE 教程</a> 、<a target="_blank" rel="noopener" href="https://discuss.em-ide.com/">EIDE 论坛</a>。</p>
+<p><img src="/../images/eide/eide.png" alt="Embedded IDE"></p>
+<h5 id="插件与配置"><a href="#插件与配置" class="headerlink" title="插件与配置"></a>插件与配置</h5><ul>
+<li>Setup Utility Tools</li>
+</ul>
+<p>在 <strong>EIDE</strong> 中选择左下区域的 <strong>OPERATIONS</strong> ，点击 <strong>Setup Utility Tools</strong>，安装相应的工具。</p>
+<p><img src="/../images/eide/eideTools1.png" alt="eideTools"></p>
+<p>图示是我目前下载的工具，以供参考。</p>
+<p><img src="/../images/eide/eideTools2.png" alt="eideTools"></p>
+<ul>
+<li>绑定编译器</li>
+</ul>
+<p>如果想要和 <strong>keil</strong> 项目共生，回到 <strong>Setting</strong> 中，搜索 <strong>ARM</strong> 并在 <strong>ARMCC5</strong> <strong>、ARMCC6</strong> 和 <strong>ARM.INI</strong> 下方地址栏中分别填入编译器及 <strong>MDK-ARM</strong> 的本地路径，使能 <strong>ARMCC</strong> 生成的 <strong>.axf</strong> 文件转成 <strong>.elf</strong> 文件。</p>
+<p><img src="/../images/eide/ccPath.png" alt="ccPath"></p>
+<h2 id="CubeMX-VSC-开发流程"><a href="#CubeMX-VSC-开发流程" class="headerlink" title="CubeMX + VSC 开发流程"></a>CubeMX + VSC 开发流程</h2><h3 id="创建-Makefile"><a href="#创建-Makefile" class="headerlink" title="创建 Makefile"></a>创建 Makefile</h3><p><strong>Makefile</strong> 文件定义了一系列规则，指明了源文件的编译顺序、依赖关系等，用来自动化编译 <strong>C&#x2F;C++</strong> 项目。上文述及， <strong>STM32CubeMX</strong> 可以生成 <strong>Makefile</strong> 文件，无需开发者编写。</p>
+<p><img src="/../images/eide/mxOutput.png" alt="mxOutput"></p>
+<h3 id="新建-EIDE-工程"><a href="#新建-EIDE-工程" class="headerlink" title="新建 EIDE 工程"></a>新建 EIDE 工程</h3><p>选中左侧导航栏的 <strong>EIDE</strong> ，点击<strong>创建新工程-&gt;空项目</strong>。</p>
+<p><img src="/../images/eide/eideNew.png" alt="eideNew"></p>
+<p>笔者选用的芯片是 <em>STM32F407</em> 系列的，故选择 <strong>Cortex-M Project</strong>。</p>
+<p><img src="/../images/eide/core.png" alt="core"></p>
+<p>需要仔细的是，此时的 <strong>EIDE</strong> 的新建工程名称应与前在 <strong>STM32CubeMX</strong> 设置的工程名称一致。</p>
+<p><img src="/../images/eide/prjName.png" alt="prjName"></p>
+<p>项目路径同样需要保持一致。</p>
+<p><img src="/../images/eide/prjPath.png" alt="prjPath"></p>
+<p>因为之前通过 <strong>STM32CubeMX</strong> 创建了项目文件，这里 <strong>EIDE</strong> 会提示是否基于已有的路径创建工程文件。</p>
+<p><img src="/../images/eide/yes1.png" alt="yes1"></p>
+<p>切换工作区。</p>
+<p><img src="/../images/eide/yes2.png" alt="yes2"></p>
+<h3 id="添加-Core-与-Drivers"><a href="#添加-Core-与-Drivers" class="headerlink" title="添加 Core 与 Drivers"></a>添加 Core 与 Drivers</h3><p>在生成的 <strong>EIDE</strong> 工程界面中点击 <strong>Project Resources</strong> ，选择 <strong>Normal Folder</strong> ，导入 <strong>Core</strong> 与 <strong>Drivers</strong> 文件夹。<del>只导入文件也是可以的，但是不建议</del></p>
+<p><img src="/../images/eide/addFolder.png" alt="addFolder"></p>
+<h3 id="项目配置"><a href="#项目配置" class="headerlink" title="项目配置"></a>项目配置</h3><p>打开 <strong>Makefile</strong> 文件，并复制 <strong>.Id</strong> 文件的文件名称。</p>
+<p><img src="/../images/eide/config1.png" alt="config1"></p>
+<p>按照 <strong>Makefile</strong> 中的信息配置编译器和烧录器选项，并添加 <strong>C</strong> 的宏定义。<br><img src="/../images/eide/config2.png" alt="config1"></p>
+<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><ul>
+<li>中文路径会导致编译失败。</li>
+</ul>
+<p>编译成功后会显示内存资源占用、hex 和 bin 文件输出路径。</p>
+<p><img src="/../images/eide/buildOutput.png" alt="buildOutput"></p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>经过<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items/CL.eide/changelog">版本更迭</a>，<strong>3.16.0</strong> 删除了自动生成 <strong>launch.json</strong> 调试配置的功能，取而代之的是菜单栏中的 <strong>Generate Cortex-Debug Configuration</strong>。</p>
+<p><img src="/../images/eide/debugConfig.png" alt="debugConfig"></p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2025 lovely-lily&#39;s blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;lovely-lily
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+
+	<canvas
+	    id="fireworks"
+ 	   style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+	></canvas>
+	<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="https://static-argvchs.netlify.app/js/fireworks.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

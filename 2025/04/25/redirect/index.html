@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>串口重定向 | lovely-lily&#39;s blog</title>
+    <meta name="author" content="lovely-lily" />
+    <meta name="description" content="于道各努力 千里自同风" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>LOVELY-LILY&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;LOVELY-LILY&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>串口重定向</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/4/25
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E7%AC%94%E8%AE%B0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                笔记
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/MCU/" style="color: #ffa2c4">
+                    MCU
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/UART/" style="color: #03a9f4">
+                    UART
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>在调试那台陈旧的开发板时，我又一次陷入了沉默。板子没有屏幕，没有操作系统，甚至连个像样的日志系统都没有。每次出问题，就像在黑暗中摸索，无声无感。</p>
+<p>直到我第一次把 <strong>printf</strong> 重定向到了串口。那一刻，像是开发板终于开了口，说：“我在跑主循环了！”、“我卡在初始化了！”、“你给的地址不对！”</p>
+<p>那种感觉，就像是教会了婴儿说话，或者黑夜里点亮了一盏灯。从此之后，每一个字节的输出，都是我和它之间最真实的对话。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><ul>
+<li><p><strong>GCC</strong> 需添加编译指令 <code>-Wl,-u_printf_float</code> ，输出浮点数</p>
+</li>
+<li><p><strong>Keil</strong> 需启用 <strong>micro lib</strong></p>
+</li>
+</ul>
+<h3 id="HAL库"><a href="#HAL库" class="headerlink" title="HAL库"></a>HAL库</h3><pre><code class="language-c">/******************************** .h ********************************/
+#define __GCC__
+#define USARTx_HANDLE huart1
+
+#ifdef __GCC__
+int __io_putchar(int ch);
+int _write(int file, char *ptr, int len);
+#else
+int fputc(int ch, FILE *f);
+#endif
+
+/******************************** .c ********************************/
+#include &lt;stdio.h&gt;
+#ifdef __GCC__
+int __io_putchar(int ch)
+&#123;
+    HAL_UART_Transmit(&amp;USARTx_HANDLE, (uint8_t *)&amp;ch, 1, HAL_MAX_DELAY);
+    return ch;
+&#125;
+int _write(int file, char *ptr, int len)
+&#123;
+    int DataIdx;
+    for (DataIdx = 0; DataIdx &lt; len; DataIdx++) &#123;
+        __io_putchar(*ptr++);
+    &#125;
+    return len;
+&#125;
+#else
+int fputc(int ch, FILE *f)
+&#123;
+    HAL_UART_Transmit(&amp;USARTx_HANDLE, (uint8_t *)&amp;ch, 1, HAL_MAX_DELAY);
+    return ch;
+&#125;
+</code></pre>
+<h3 id="LL库"><a href="#LL库" class="headerlink" title="LL库"></a>LL库</h3><p>与 <strong>HAL库</strong> 类似，将 <code>huart1</code> 改为 <code>USART1</code>，<strong>LL库</strong> 不使用句柄。此外，更改串口发送函数。</p>
+<pre><code class="language-c">/******************************** .h ********************************/
+#define USARTx_HANDLE USART1
+
+/******************************** .c ********************************/
+//将 HAL_UART_Transmit 替换成以下
+    LL_USART_TransmitData8(USARTx_HANDLE, (uint8_t)ch);
+    while (!LL_USART_IsActiveFlag_TXE(USARTx_HANDLE))&#123;
+        ;
+    &#125;
+</code></pre>
+<h3 id="STD库"><a href="#STD库" class="headerlink" title="STD库"></a>STD库</h3><p>与 <strong>LL库</strong> 类似，不使用句柄，仅更改串口发送函数。</p>
+<pre><code class="language-c">/******************************** .c ********************************/
+    USART_SendData(USARTx_HANDLE, (u8)ch);
+    while (USART_GetFlagStatus(USARTx_HANDLE, USART_FLAG_TXE) == RESET)&#123;
+        ;
+    &#125;
+</code></pre>
+<h3 id="寄存器"><a href="#寄存器" class="headerlink" title="寄存器"></a>寄存器</h3><p>同上。</p>
+<pre><code class="language-c">/******************************** .c ********************************/
+    while ((USARTx_HANDLE-&gt;SR &amp; 0X40) == 0)&#123;
+        ;
+    &#125;
+    USARTx_HANDLE-&gt;DR = (uint8_t)ch;
+</code></pre>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2025 lovely-lily&#39;s blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;lovely-lily
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+
+	<canvas
+	    id="fireworks"
+ 	   style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+	></canvas>
+	<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="https://static-argvchs.netlify.app/js/fireworks.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>

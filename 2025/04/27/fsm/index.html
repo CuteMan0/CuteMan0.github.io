@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>状态机（State Machine） | lovely-lily&#39;s blog</title>
+    <meta name="author" content="lovely-lily" />
+    <meta name="description" content="于道各努力 千里自同风" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>LOVELY-LILY&#39;S BLOG</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;LOVELY-LILY&#39;S BLOG</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>状态机（State Machine）</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/4/27
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Software/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Software
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/FSM/" style="color: #ff7d73">
+                    FSM
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/C/" style="color: #00a596">
+                    C
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="引"><a href="#引" class="headerlink" title="引"></a>引</h2><p>简单说，<strong>状态机</strong>就是一种在不同状态之间<strong>切换</strong>，并根据<strong>当前状态</strong>和<strong>输入</strong>决定行为的模型。</p>
+<p>可以理解成这样的一套东西：(假若我是一台CD机)</p>
+<p>一组状态（比如：Idle、Playing、Paused）</p>
+<p>一组事件&#x2F;输入（比如：Start 按钮按下、Pause 按钮按下）</p>
+<p>一组转移规则（比如：在 Idle 状态下按 Start -&gt; 切到 Playing）</p>
+<p>一些动作（状态变化时要做什么，比如初始化资源、更新界面）</p>
+<table>
+<thead>
+<tr>
+<th>当前状态</th>
+<th>输入事件</th>
+<th>下一个状态</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Idle</td>
+<td>点击播放</td>
+<td>Playing</td>
+<td>开始播放音乐</td>
+</tr>
+<tr>
+<td>Playing</td>
+<td>点击暂停</td>
+<td>Paused</td>
+<td>暂停音乐</td>
+</tr>
+<tr>
+<td>Paused</td>
+<td>点击播放</td>
+<td>Playing</td>
+<td>继续播放</td>
+</tr>
+<tr>
+<td>Playing</td>
+<td>播放结束</td>
+<td>Idle</td>
+<td>回到初始状态</td>
+</tr>
+</tbody></table>
+<p>状态机的核心就是：“<strong>状态 + 输入 → 动作 &amp; 新状态</strong>”</p>
+<h3 id="表驱动状态机"><a href="#表驱动状态机" class="headerlink" title="表驱动状态机"></a>表驱动状态机</h3><p>显然，我们可以使用 <strong>C</strong> 中的数组来实现如此一个状态机的<strong>转移表</strong>：</p>
+<pre><code class="language-c">typedef void (*pfState)(void);
+
+typedef enum eEvent &#123;
+    EVT_NO_EVENT,
+    EVT_Start_PRESSED,
+    EVT_Pause_PRESSED,
+    EVT_END
+&#125; eEvent;
+
+typedef struct stStmRow &#123;
+    pfState  pSrcState;
+    eEvent        eEvt;
+    pfState pDestState;
+&#125; StmRow_t;
+
+// 定义状态函数
+void stateIdle(void);
+void statePlaying(void);
+void statePaused(void);
+
+static eEvent      eCurrentEvent       = EVT_NO_EVENT;
+static pfState     pfCurrentState      = stateIdle;
+
+// 状态事件表
+StmRow_t  stm[]= &#123;
+&#123;stateIdle     , EVT_Start_PRESSED , statePlaying &#125;,
+&#123;statePlaying  , EVT_Pause_PRESSED , statePaused  &#125;,
+&#123;statePaused   , EVT_Start_PRESSED , statePlaying &#125;,
+&#123;statePlaying  , EVT_END           , stateIdle    &#125;
+&#125;;
+</code></pre>
+<p>通过 <code>StateMachineHandler</code> 查询判断 <code>pfCurrentState</code> 和 <code>eCurrentEvent</code> 与 <code>stm</code> 中的是否匹配，如果匹配，则执行相应的动作，并切换到下一个状态。当然需要为状态添加进入和离开的动作：</p>
+<pre><code class="language-c">static bool bIsStateFirstEntry  = false;
+static bool bIsStateAboutToExit = false;
+
+void stateIdle(void)
+&#123;
+    if(bIsStateFirstEntry) &#123;
+        // 处理初次进入，进行相关初始化
+    &#125;
+
+    // ...
+
+    if(bIsStateAboutToExit) &#123;
+        // 处理离开状态，比如释放内存，复位寄存器等
+    &#125;
+&#125;
+
+void StateMachineHandler()
+&#123;
+    int idx = 0;
+    if(EVT_NO_EVENT != eCurrentEvent) &#123;
+        for(;idx &lt; sizeof(stm)/sizeof(StmRow_t); idx++) &#123;
+            if( (stm[idx].pSrcState == pfCurrentState) &amp;&amp;
+                (stm[idx].eEvt      == eCurrentEvent)) &#123;
+                eCurrentEvent  = EVT_NO_EVENT;
+                bIsStateAboutToExit = true;
+                pfCurrentState();
+                // 更新状态
+                pfCurrentState = stm[idx].pDestState;
+                bIsStateFirstEntry = true;
+            &#125;
+        &#125;
+    &#125;
+
+    if(NULL != pfCurrentState) &#123;
+        pfCurrentState();
+        bIsStateFirstEntry = false;
+    &#125;
+&#125;
+</code></pre>
+<h3 id="事件驱动状态机"><a href="#事件驱动状态机" class="headerlink" title="事件驱动状态机"></a>事件驱动状态机</h3><p>需要提及的是，上文表驱动状态机的实现较繁琐，一般不会应用在如此简单的状态机中。</p>
+<ul>
+<li>最快速的写法：</li>
+</ul>
+<pre><code class="language-c">void CD_Handler()
+&#123;
+    if(Start_pressed) &#123;
+        // 🎵 Playing
+    &#125;
+    if(Pause_pressed) &#123;
+        // ⏸ Paused
+    &#125;
+    if(Play_End) &#123;
+        // 💤 Idle
+    &#125;
+&#125;
+</code></pre>
+<p>这样的代码<strong>隐式</strong>的描述了状态机，而且存在逻辑隐患，查询效率低。</p>
+<ul>
+<li>普遍的的 <code>switch-case</code> 示例：</li>
+</ul>
+<pre><code class="language-c">void CD_Switcher()
+&#123;
+    switch (fsm-&gt;current_state) &#123;
+        case Idle:
+            if (event == Start_pressed) &#123;
+                playing_actions();
+                fsm-&gt;current_state = Playing;
+            &#125;
+            break;
+        case Playing:
+            if (event == Pause_pressed) &#123;
+                paused_actions();
+                fsm-&gt;current_state = Paused;
+            &#125; else if (event == Play_End) &#123;
+                idle_actions();
+                fsm-&gt;current_state = Idle;
+            &#125;
+            break;
+        // 其他状态...
+    &#125;
+&#125;
+</code></pre>
+<p>这样看起来似乎清晰一点，但是直接扔进主循环中会导致CPU一直在查询状态机，严重阻塞其他任务。因此，引入<strong>事件驱动状态机</strong>，当有事件发生时，再进行状态切换：</p>
+<pre><code class="language-c">    eEvent event = dequeue(fsm-&gt;event_queue);
+    if(event != No_event) &#123;
+        CD_Switcher(fsm, event);
+    &#125;
+</code></pre>
+<p>通过事件队列 <code>dequeue()</code> 来推动状态机的更新，从而避免CPU的轮询。同样可以在表驱动状态机中引入事件队列。</p>
+<ul>
+<li>除了 <code>if-if</code> 这种低效实现，其他的状态机实现按照<strong>外面调度方式</strong>决定它是不是<strong>阻塞</strong>或者<strong>打空转</strong>。</li>
+</ul>
+<h3 id="业务与引擎分离状态机"><a href="#业务与引擎分离状态机" class="headerlink" title="业务与引擎分离状态机"></a>业务与引擎分离状态机</h3><p>回顾最初的表驱动状态机实现，<code>StateMachineHandler</code> 只负责状态切换，而业务逻辑则由状态函数 <code>stateIdle</code> 实现。两者解耦，互不污染，互不强依赖。</p>
+<p>将具体的业务主体（CD机）与状态机引擎分离，状态机引擎只负责状态切换，业务主体则负责具体的业务逻辑。这样，状态机引擎可以复用，而业务主体则可以专注于自己的业务逻辑。</p>
+<p>表驱动的显著优点是：<strong>可读性强</strong>，状态转移规则明确地写在转移表中。<br>——但是，当状态机非常复杂、动态转移多时，转移表也可能变得非常庞大、难以维护。</p>
+<p>提供完全分离的业务与引擎：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/CuteMan0/fsm">简单的状态机引擎和业务逻辑分离的框架</a></li>
+</ul>
+<p>但这并不能直接解决状态转移表过于庞大、难以维护的问题，业务逻辑会随着状态的增加而膨胀。需要在此架构中创建子状态机，将状态转移表拆分到各个状态机中。同时需要将行为动作从状态函数中剥离出来。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2025 lovely-lily&#39;s blog
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;lovely-lily
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+
+	<canvas
+	    id="fireworks"
+ 	   style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+	></canvas>
+	<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+	<script src="https://static-argvchs.netlify.app/js/fireworks.min.js"></script>
+
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
